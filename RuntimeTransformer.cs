@@ -11,12 +11,26 @@ namespace SyncroSim.NetLogo
     {
         public override void Transform()
         {
-            string JarFileName = this.GetNetLogoJarFile();
+            try
+            {
+                this.SetStatusMessage("Running NetLogo");
+                this.InternalTransform();
+            }
+            finally
+            {
+                this.SetStatusMessage(null);
+            }
+        }
+
+        private void InternalTransform()
+        {
             string TemplateFileName = this.GetNetLogoTemplateFile();
-            string Experiment = this.GetNetLogoExperiment();
 
             if (this.IsHeadlessInvocation())
             {
+                string JarFileName = this.GetNetLogoJarFile();
+                string Experiment = this.GetNetLogoExperiment();
+
                 string args = string.Format(CultureInfo.InvariantCulture,
                     "-Xmx1024m -Dfile.encoding=UTF-8 -cp \"{0}\" org.nlogo.headless.Main --model \"{1}\" --experiment {2}",
                     JarFileName, TemplateFileName, Experiment);
@@ -36,7 +50,7 @@ namespace SyncroSim.NetLogo
 
             if (dr == null)
             {
-                return false;
+                return true;
             }
 
             return ((string)dr["Value"] != "True");
