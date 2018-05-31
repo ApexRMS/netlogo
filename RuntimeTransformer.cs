@@ -52,8 +52,10 @@ namespace SyncroSim.NetLogo
             {
                 return true;
             }
-
-            return ((string)dr["Value"] != "True");
+            else
+            {
+                return ((string)dr["Value"] != "True");
+            }
         }
 
         private string GetNetLogoJarFile()
