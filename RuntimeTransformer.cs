@@ -159,7 +159,7 @@ namespace SyncroSim.NetLogo
         {
             DataRow dr = this.ResultScenario.GetDataSheet("NetLogo_RunControl").GetDataRow();
 
-            if (dr[columnName] == DBNull.Value)
+            if (dr == null || dr[columnName] == DBNull.Value)
             {
                 throw new ArgumentException("The run control data is missing for: " + columnName);
             }
