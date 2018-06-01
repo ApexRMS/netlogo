@@ -106,18 +106,20 @@ namespace SyncroSim.NetLogo
 
         private string GetNetLogoTemplateFile()
         {
-            string TemplateFileName = (string)this.GetRunControlValue("TemplateFile");
-            string TempFolderName = this.Library.GetTempFolderName("NetLogo");
-            string f1 = this.GetRunControlFileName(TemplateFileName);
-            string f2 = Path.Combine(TempFolderName, TemplateFileName);
+            //string TemplateFileName = (string)this.GetRunControlValue("TemplateFile");
+            //string TempFolderName = this.Library.GetTempFolderName("NetLogo");
+            //string f1 = this.GetRunControlFileName(TemplateFileName);
+            //string f2 = Path.Combine(TempFolderName, TemplateFileName);
 
-            if (!File.Exists(f1))
-            {
-                throw new InvalidOperationException("The NetLogo template file was not found.");
-            }
+            //if (!File.Exists(f1))
+            //{
+            //    throw new InvalidOperationException("The NetLogo template file was not found.");
+            //}
 
-            this.WriteNetLogoTemplate(f1, f2);
-            return f2;
+            //this.WriteNetLogoTemplate(f1, f2);
+            //return f2;
+
+            return null;
         }
 
         private void WriteNetLogoTemplate(string source, string target)
