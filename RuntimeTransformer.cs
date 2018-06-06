@@ -3,12 +3,21 @@ using System;
 using System.IO;
 using System.Data;
 using SyncroSim.Core;
+using SyncroSim.StochasticTime;
 using System.Globalization;
 
 namespace SyncroSim.NetLogo
 {
-    class RuntimeTransformer : Transformer
+    class RuntimeTransformer : StochasticTimeTransformer
     {
+        public override void Configure()
+        {
+            base.Configure();
+
+
+
+        }
+
         public override void Transform()
         {
             try
@@ -26,7 +35,12 @@ namespace SyncroSim.NetLogo
         {
             string TemplateFileName = this.GetNetLogoTemplateFile();
 
-            if (this.IsHeadlessInvocation())
+            if (this.IsUserInteractive())
+            {
+                string Exe = this.GetNetLogoExeFile();
+                base.ExternalTransform(Exe, null, TemplateFileName, null);
+            }
+            else
             {
                 string JarFileName = this.GetNetLogoJarFile();
                 string Experiment = this.GetNetLogoExperiment();
@@ -36,25 +50,6 @@ namespace SyncroSim.NetLogo
                     JarFileName, TemplateFileName, Experiment);
 
                 base.ExternalTransform("java", null, args, null);
-            }
-            else
-            {
-                string Exe = this.GetNetLogoExeFile();
-                base.ExternalTransform(Exe, null, TemplateFileName, null);
-            }
-        }
-
-        private bool IsHeadlessInvocation()
-        {
-            DataRow dr = this.GetEnvironmentRow("SSIM_USER_INTERACTIVE");
-
-            if (dr == null)
-            {
-                return true;
-            }
-            else
-            {
-                return ((string)dr["Value"] != "True");
             }
         }
 
