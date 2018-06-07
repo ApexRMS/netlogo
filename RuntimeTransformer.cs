@@ -5,6 +5,7 @@ using System.Data;
 using SyncroSim.Core;
 using SyncroSim.StochasticTime;
 using System.Globalization;
+using System.Collections.Generic;
 
 namespace SyncroSim.NetLogo
 {
@@ -12,7 +13,10 @@ namespace SyncroSim.NetLogo
     {
         private string m_ExeName;
         private string m_JarFileName;
+        private DataSheet m_RunControl;
         private DataSheet m_InputFiles;
+        private DataSheet m_OutputFiles;
+        private DataSheet m_Symbols;
         private InputFileMap m_InputFileMap;
         private string m_MinimumIteration;
         private string m_MaximumIteration;
@@ -23,28 +27,23 @@ namespace SyncroSim.NetLogo
         private const string DEFAULT_NETLOGO_FOLDER = "NetLogo 6.0";
         private const string NETLOGO_EXE_NAME = "NetLogo.exe";
 
-        public override void Configure()
-        {
-            base.Configure();
-
-            DataSheet ds = this.ResultScenario.GetDataSheet("NetLogo_RunControl");
-            DataTable dt = ds.GetData();
-
-            if (ds.GetDataRow() == null)
-            {
-                dt.Rows.Add(dt.NewRow());
-                ds.Changes.Add(new ChangeRecord(this, "Added default run control data."));
-            }
-        }
-
         public override void Initialize()
         {
             base.Initialize();
 
+            this.InitializeDataSheets();
             this.InitializeRunControl();
             this.InitializeExeName();
             this.InitializeJarFileName();
             this.InitializeInputFiles();
+        }
+
+        private void InitializeDataSheets()
+        {
+            this.m_RunControl = this.ResultScenario.GetDataSheet("NetLogo_RunControl");
+            this.m_InputFiles = this.ResultScenario.GetDataSheet("NetLogo_InputFile");
+            this.m_OutputFiles = this.ResultScenario.GetDataSheet("NetLogo_OutputFile");
+            this.m_Symbols = this.ResultScenario.GetDataSheet("NetLogo_Symbol");
         }
 
         private void InitializeRunControl()
@@ -84,17 +83,17 @@ namespace SyncroSim.NetLogo
 
         void InitializeInputFiles()
         {
-            this.m_InputFileMap = new InputFileMap();
-            this.m_InputFiles = this.ResultScenario.GetDataSheet("NetLogo_InputFile");
+            this.m_InputFileMap = new InputFileMap();           
             DataTable dt = this.m_InputFiles.GetData();
 
             foreach (DataRow dr in dt.Rows)
             {
                 Nullable<int> Iteration = GetNullableInt(dr, "Iteration");
                 Nullable<int> Timestep = GetNullableInt(dr, "Timestep");
+                string Symbol = (string)dr["Symbol"];
                 string Filename = (string)dr["Filename"];
 
-                this.m_InputFileMap.AddInputFile(Iteration, Timestep, Filename);
+                this.m_InputFileMap.AddInputFileRecord(Iteration, Timestep, Symbol, Filename);
             }
         }
 
@@ -102,7 +101,7 @@ namespace SyncroSim.NetLogo
         {
             base.OnTimestep(iteration, timestep);
 
-            string TemplateFileName = this.CreateNetLogoTemplateFile();
+            string TemplateFileName = this.CreateNetLogoTemplateFile(iteration, timestep);
 
             if (this.IsUserInteractive())
             {
@@ -118,7 +117,7 @@ namespace SyncroSim.NetLogo
             }
         }
 
-        private string CreateNetLogoTemplateFile()
+        private string CreateNetLogoTemplateFile(int iteration, int timestep)
         {       
             string TempFolderName = this.Library.CreateTempFolder("NetLogo", true);
             string f1 = this.GetRunControlFileName(this.m_TemplateFileName);
@@ -129,17 +128,12 @@ namespace SyncroSim.NetLogo
                 throw new InvalidOperationException("The NetLogo template file was not found.");
             }
 
-            this.WriteNetLogoTemplate(f1, f2);
+            this.WriteNetLogoTemplate(f1, f2, iteration, timestep, TempFolderName);
             return f2;
         }
 
-        private void WriteNetLogoTemplate(string source, string target)
+        private void WriteNetLogoTemplate(string source, string target, int iteration, int timestep, string tempFolderName)
         {
-            if (File.Exists(target))
-            {
-                File.Delete(target);
-            }
-
             using (StreamReader s = new StreamReader(source))
             {
                 string line;
@@ -148,14 +142,18 @@ namespace SyncroSim.NetLogo
                 {
                     while ((line = s.ReadLine()) != null)
                     {
-                        line = this.ReplaceSymbols(line);
+                        line = this.ProcessSystemSymbols(line);
+                        line = this.ProcessInputFileSymbols(line, iteration, timestep, tempFolderName);
+                        line = this.ProcessOutputFileSymbols(line, tempFolderName);
+                        line = this.ProcessOtherSymbols(line);
+
                         t.WriteLine(line);
                     }
                 }
             }
         }
 
-        private string ReplaceSymbols(string line)
+        private string ProcessSystemSymbols(string line)
         {
             string l = line;
 
@@ -167,9 +165,71 @@ namespace SyncroSim.NetLogo
             return (l);
         }
 
+        private string ProcessInputFileSymbols(string line, int iteration, int timestep, string tempFolderName)
+        {
+            string l = line;
+            List<InputFileRecord> recs = this.m_InputFileMap.GetInputFileRecords(iteration, timestep);
+
+            foreach (InputFileRecord r in recs)
+            {          
+                string sym = "%" + r.Symbol + "%";
+
+                if (l.Contains(sym))
+                {
+                    string f1 = this.GetInputFileName(r.Filename);
+                    string f2 = Path.Combine(tempFolderName, r.Filename);
+                    string val = "\"" + f2.Replace(@"\", @"\\") + "\"";
+
+                    l = l.Replace(sym, val);
+
+                    if (!File.Exists(f2))
+                    {
+                        File.Copy(f1, f2);
+                    }
+                }
+            }       
+
+            return (l);
+        }
+
+        private string ProcessOutputFileSymbols(string line, string tempFolderName)
+        {
+            string l = line;
+
+            foreach (DataRow dr in this.m_OutputFiles.GetData().Rows)
+            {
+                string sym = "%" + (string)dr["Symbol"] + "%";
+
+                if (l.Contains(sym))
+                {
+                    string f1 = Path.Combine(tempFolderName, (string)dr["Filename"]);
+                    string val = "\"" + f1.Replace(@"\", @"\\") + "\"";
+
+                    l = l.Replace(sym, val);
+                }
+            }
+
+            return (l);
+        }
+
+        private string ProcessOtherSymbols(string line)
+        {
+            string l = line;
+
+            foreach (DataRow dr in this.m_Symbols.GetData().Rows)
+            {
+                string sym = "%" + (string)dr["Symbol"] + "%";
+                string val = (string)dr["Value"];
+
+                l = l.Replace(sym, val);
+            }             
+
+            return (l);
+        }
+
         private object GetRunControlValue(string columnName)
         {
-            DataRow dr = this.ResultScenario.GetDataSheet("NetLogo_RunControl").GetDataRow();
+            DataRow dr = this.m_RunControl.GetDataRow();
 
             if (dr == null || dr[columnName] == DBNull.Value)
             {
@@ -195,25 +255,13 @@ namespace SyncroSim.NetLogo
 
         private string GetRunControlFileName(string fileName)
         {
-            DataSheet ds = this.ResultScenario.GetDataSheet("NetLogo_RunControl");
-            string f = this.Library.GetFolderName(LibraryFolderType.Input, ds, false);
-
+            string f = this.Library.GetFolderName(LibraryFolderType.Input, this.m_RunControl, false);
             return (Path.Combine(f, fileName));
         }
 
         private string GetInputFileName(string fileName)
         {
-            DataSheet ds = this.ResultScenario.GetDataSheet("NetLogo_InputFiles");
-            string f = this.Library.GetFolderName(LibraryFolderType.Input, ds, false);
-
-            return (Path.Combine(f, fileName));
-        }
-
-        private string GetOutputFileName(string fileName)
-        {
-            DataSheet ds = this.ResultScenario.GetDataSheet("NetLogo_OutputFiles");
-            string f = this.Library.GetFolderName(LibraryFolderType.Output, ds, true);
-
+            string f = this.Library.GetFolderName(LibraryFolderType.Input, this.m_InputFiles, false);
             return (Path.Combine(f, fileName));
         }
     }

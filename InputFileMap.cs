@@ -1,30 +1,28 @@
 ﻿
 using System;
 using SyncroSim.Common;
-using System.Globalization;
+using System.Collections.Generic;
 
 namespace SyncroSim.NetLogo
 {
     internal class InputFileMap
     {
-        private SortedKeyMap2<string> m_Map = new SortedKeyMap2<string>(SearchMode.ExactPrev);
+        private SortedKeyMap2<List<InputFileRecord>> m_Map = new SortedKeyMap2<List<InputFileRecord>>(SearchMode.ExactPrev);
 
-        public void AddInputFile(Nullable<int> iteration, Nullable<int> timestep, string fileName)
+        public void AddInputFileRecord(Nullable<int> iteration, Nullable<int> timestep, string symbol, string fileName)
         {
-            string f = this.m_Map.GetItemExact(iteration, timestep);
+            List <InputFileRecord> l = this.m_Map.GetItemExact(iteration, timestep);
 
-            if (f != null)
+            if (l == null)
             {
-                string s = string.Format(CultureInfo.InvariantCulture,
-                    "There is already a file for iteration {0} and timestep {1}", iteration, timestep);
-
-                throw new ArgumentException(s);
+                l = new List<InputFileRecord>();
+                this.m_Map.AddItem(iteration, timestep, l);
             }
 
-            this.m_Map.AddItem(iteration, timestep, fileName);
+            l.Add(new InputFileRecord(symbol, fileName));
         }
 
-        public string GetInputFile(int iteration, int timestep)
+        public List<InputFileRecord> GetInputFileRecords(int iteration, int timestep)
         {
             return this.m_Map.GetItem(iteration, timestep);
         }
