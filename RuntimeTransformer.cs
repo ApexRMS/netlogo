@@ -14,9 +14,11 @@ namespace SyncroSim.NetLogo
         private string m_ExeName;
         private string m_JarFileName;
         private DataSheet m_RunControl;
-        private DataSheet m_InputFiles;
-        private DataSheet m_OutputFiles;
-        private DataSheet m_Symbols;
+        private DataSheet m_InputFileSymbols;
+        private DataSheet m_OutputFileSymbols;
+        private DataSheet m_OtherSymbols;
+        private DataSheet m_OutputRasterFiles;
+        private DataSheet m_OutputOtherFiles;
         private InputFileMap m_InputFileMap;
         private string m_MinimumIteration;
         private string m_MaximumIteration;
@@ -41,9 +43,11 @@ namespace SyncroSim.NetLogo
         private void InitializeDataSheets()
         {
             this.m_RunControl = this.ResultScenario.GetDataSheet("NetLogo_RunControl");
-            this.m_InputFiles = this.ResultScenario.GetDataSheet("NetLogo_InputFile");
-            this.m_OutputFiles = this.ResultScenario.GetDataSheet("NetLogo_OutputFile");
-            this.m_Symbols = this.ResultScenario.GetDataSheet("NetLogo_Symbol");
+            this.m_InputFileSymbols = this.ResultScenario.GetDataSheet("NetLogo_InputFileSymbol");
+            this.m_OutputFileSymbols = this.ResultScenario.GetDataSheet("NetLogo_OutputFileSymbol");
+            this.m_OtherSymbols = this.ResultScenario.GetDataSheet("NetLogo_OtherSymbol");
+            this.m_OutputRasterFiles = this.ResultScenario.GetDataSheet("NetLogo_OutputRasterFile");
+            this.m_OutputOtherFiles = this.ResultScenario.GetDataSheet("NetLogo_OutputOtherFile");
         }
 
         private void InitializeRunControl()
@@ -84,7 +88,7 @@ namespace SyncroSim.NetLogo
         void InitializeInputFiles()
         {
             this.m_InputFileMap = new InputFileMap();           
-            DataTable dt = this.m_InputFiles.GetData();
+            DataTable dt = this.m_InputFileSymbols.GetData();
 
             foreach (DataRow dr in dt.Rows)
             {
@@ -114,6 +118,57 @@ namespace SyncroSim.NetLogo
                     this.m_JarFileName, TemplateFileName, this.m_ExperimentName);
 
                 base.ExternalTransform("java", null, args, null);
+            }
+
+            this.RetrieveOutputFiles(iteration, timestep);
+        }
+
+        private void RetrieveOutputFiles(int iteration, int timestep)
+        {
+            DataTable OutRastTable = this.m_OutputRasterFiles.GetData();
+            DataTable OutOtherTable = this.m_OutputOtherFiles.GetData();
+            DataTable OutFileSymsTable = this.m_OutputFileSymbols.GetData();
+            string TempFolderName = this.Library.CreateTempFolder("NetLogo", false);
+            string OutRasterFolderName = this.Library.GetFolderName(LibraryFolderType.Output, this.m_OutputRasterFiles, true);
+            string OutOtherFolderName = this.Library.GetFolderName(LibraryFolderType.Output, this.m_OutputOtherFiles, true);
+
+            foreach (DataRow dr in OutFileSymsTable.Rows)
+            {
+                string BaseName = (string)dr["Filename"];
+                string SourceFileName = Path.Combine(TempFolderName, BaseName);
+
+                if (File.Exists(SourceFileName))
+                {
+                    string FormattedBaseName = string.Format(
+                        CultureInfo.InvariantCulture, 
+                        "{0}-It{1}-Ts{2}", 
+                        Path.GetFileNameWithoutExtension(BaseName), 
+                        iteration, timestep);
+
+                    string AsciiName = Path.Combine(OutRasterFolderName, FormattedBaseName + ".asc");
+                    string TifName = Path.Combine(OutRasterFolderName, FormattedBaseName + ".tif");
+                    string OtherName = Path.Combine(OutOtherFolderName, Path.GetFileName(SourceFileName));
+
+                    if (Path.GetExtension(SourceFileName).ToLower() == ".asc")
+                    {
+                        if (!Translate.GdalTranslate(SourceFileName, TifName, GdalOutputFormat.GTiff, GdalOutputType.Float64, GeoTiffCompressionType.None, null))
+                        {
+                            throw new InvalidOperationException("Cannot translate from ASCII: " + SourceFileName);
+                        }
+
+                        OutRastTable.Rows.Add(new object[] { iteration, timestep, Path.GetFileName(TifName) });
+                    }
+                    else if(Path.GetExtension(SourceFileName).ToLower() == ".tif")
+                    {
+                        File.Copy(SourceFileName, AsciiName);
+                        OutRastTable.Rows.Add(new object[] { iteration, timestep, Path.GetFileName(TifName) });
+                    }
+                    else
+                    {
+                        File.Copy(SourceFileName, OtherName);
+                        OutOtherTable.Rows.Add(new object[] { iteration, timestep, Path.GetFileName(OtherName) });
+                    }
+                }
             }
         }
 
@@ -196,7 +251,7 @@ namespace SyncroSim.NetLogo
         {
             string l = line;
 
-            foreach (DataRow dr in this.m_OutputFiles.GetData().Rows)
+            foreach (DataRow dr in this.m_OutputFileSymbols.GetData().Rows)
             {
                 string sym = "%" + (string)dr["Symbol"] + "%";
 
@@ -216,7 +271,7 @@ namespace SyncroSim.NetLogo
         {
             string l = line;
 
-            foreach (DataRow dr in this.m_Symbols.GetData().Rows)
+            foreach (DataRow dr in this.m_OtherSymbols.GetData().Rows)
             {
                 string sym = "%" + (string)dr["Symbol"] + "%";
                 string val = (string)dr["Value"];
@@ -261,7 +316,7 @@ namespace SyncroSim.NetLogo
 
         private string GetInputFileName(string fileName)
         {
-            string f = this.Library.GetFolderName(LibraryFolderType.Input, this.m_InputFiles, false);
+            string f = this.Library.GetFolderName(LibraryFolderType.Input, this.m_InputFileSymbols, false);
             return (Path.Combine(f, fileName));
         }
     }
