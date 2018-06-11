@@ -18,7 +18,6 @@ namespace SyncroSim.NetLogo
         private DataSheet m_OutputFileSymbols;
         private DataSheet m_OtherSymbols;
         private DataSheet m_OutputRasterFiles;
-        private DataSheet m_OutputOtherFiles;
         private InputFileMap m_InputFileMap;
         private string m_MinimumIteration;
         private string m_MaximumIteration;
@@ -47,7 +46,6 @@ namespace SyncroSim.NetLogo
             this.m_OutputFileSymbols = this.ResultScenario.GetDataSheet("NetLogo_OutputFileSymbol");
             this.m_OtherSymbols = this.ResultScenario.GetDataSheet("NetLogo_OtherSymbol");
             this.m_OutputRasterFiles = this.ResultScenario.GetDataSheet("NetLogo_OutputRasterFile");
-            this.m_OutputOtherFiles = this.ResultScenario.GetDataSheet("NetLogo_OutputOtherFile");
         }
 
         private void InitializeRunControl()
@@ -126,11 +124,9 @@ namespace SyncroSim.NetLogo
         private void RetrieveOutputFiles(int iteration, int timestep)
         {
             DataTable OutRastTable = this.m_OutputRasterFiles.GetData();
-            DataTable OutOtherTable = this.m_OutputOtherFiles.GetData();
             DataTable OutFileSymsTable = this.m_OutputFileSymbols.GetData();
             string TempFolderName = this.Library.CreateTempFolder("NetLogo", false);
             string OutRasterFolderName = this.Library.GetFolderName(LibraryFolderType.Output, this.m_OutputRasterFiles, true);
-            string OutOtherFolderName = this.Library.GetFolderName(LibraryFolderType.Output, this.m_OutputOtherFiles, true);
 
             foreach (DataRow dr in OutFileSymsTable.Rows)
             {
@@ -147,7 +143,7 @@ namespace SyncroSim.NetLogo
 
                     string AsciiName = Path.Combine(OutRasterFolderName, FormattedBaseName + ".asc");
                     string TifName = Path.Combine(OutRasterFolderName, FormattedBaseName + ".tif");
-                    string OtherName = Path.Combine(OutOtherFolderName, Path.GetFileName(SourceFileName));
+                    string OtherName = Path.Combine(OutRasterFolderName, FormattedBaseName + Path.GetExtension(SourceFileName));
 
                     if (Path.GetExtension(SourceFileName).ToLower() == ".asc")
                     {
@@ -166,7 +162,6 @@ namespace SyncroSim.NetLogo
                     else
                     {
                         File.Copy(SourceFileName, OtherName);
-                        OutOtherTable.Rows.Add(new object[] { iteration, timestep, Path.GetFileName(OtherName) });
                     }
                 }
             }
