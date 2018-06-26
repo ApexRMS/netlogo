@@ -50,12 +50,12 @@ namespace SyncroSim.NetLogo
 
         private void InitializeRunControl()
         {
-            this.m_MinimumIteration = Convert.ToString(this.GetRunControlValue("MinimumIteration"));
-            this.m_MaximumIteration = Convert.ToString(this.GetRunControlValue("MaximumIteration"));
-            this.m_MinimumTimestep= Convert.ToString(this.GetRunControlValue("MinimumTimestep"));
-            this.m_MaximumTimestep = Convert.ToString(this.GetRunControlValue("MaximumTimestep"));
-            this.m_TemplateFileName = Convert.ToString(this.GetRunControlValue("TemplateFile"));
-            this.m_ExperimentName = Convert.ToString(this.GetRunControlValue("Experiment"));
+            this.m_MinimumIteration = Convert.ToString(this.GetRunControlValue("MinimumIteration"), CultureInfo.InvariantCulture);
+            this.m_MaximumIteration = Convert.ToString(this.GetRunControlValue("MaximumIteration"), CultureInfo.InvariantCulture);
+            this.m_MinimumTimestep= Convert.ToString(this.GetRunControlValue("MinimumTimestep"), CultureInfo.InvariantCulture);
+            this.m_MaximumTimestep = Convert.ToString(this.GetRunControlValue("MaximumTimestep"), CultureInfo.InvariantCulture);
+            this.m_TemplateFileName = Convert.ToString(this.GetRunControlValue("TemplateFile"), CultureInfo.InvariantCulture);
+            this.m_ExperimentName = Convert.ToString(this.GetRunControlValue("Experiment"), CultureInfo.InvariantCulture);
         }
 
         private void InitializeExeName()
@@ -145,7 +145,7 @@ namespace SyncroSim.NetLogo
                     string TifName = Path.Combine(OutRasterFolderName, FormattedBaseName + ".tif");
                     string OtherName = Path.Combine(OutRasterFolderName, FormattedBaseName + Path.GetExtension(SourceFileName));
 
-                    if (Path.GetExtension(SourceFileName).ToLower() == ".asc")
+                    if (Path.GetExtension(SourceFileName).ToUpperInvariant() == ".ASC")
                     {
                         if (!Translate.GdalTranslate(SourceFileName, TifName, GdalOutputFormat.GTiff, GdalOutputType.Float64, GeoTiffCompressionType.None, null))
                         {
@@ -154,7 +154,7 @@ namespace SyncroSim.NetLogo
 
                         OutRastTable.Rows.Add(new object[] { iteration, timestep, Path.GetFileName(TifName) });
                     }
-                    else if(Path.GetExtension(SourceFileName).ToLower() == ".tif")
+                    else if(Path.GetExtension(SourceFileName).ToUpperInvariant() == ".TIF")
                     {
                         File.Copy(SourceFileName, AsciiName);
                         OutRastTable.Rows.Add(new object[] { iteration, timestep, Path.GetFileName(TifName) });
@@ -289,7 +289,7 @@ namespace SyncroSim.NetLogo
             return dr[columnName];
         }
 
-        private int? GetNullableInt(DataRow dr, string columnName)
+        private static int? GetNullableInt(DataRow dr, string columnName)
         {
             object value = dr[columnName];
 
