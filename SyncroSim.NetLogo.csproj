@@ -84,6 +84,12 @@
     <Compile Include="InputFileMap.cs" />
     <Compile Include="InputFileRecord.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RunControlDataFeedView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="RunControlDataFeedView.Designer.cs">
+      <DependentUpon>RunControlDataFeedView.cs</DependentUpon>
+    </Compile>
     <Compile Include="RuntimeTransformer.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -110,6 +116,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="module.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="RunControlDataFeedView.resx">
+      <DependentUpon>RunControlDataFeedView.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
