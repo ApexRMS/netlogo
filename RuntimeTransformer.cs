@@ -15,14 +15,14 @@ namespace SyncroSim.NetLogo
         private string m_JarFileName;
         private DataSheet m_RunControl;
         private DataSheet m_InputFileSymbols;
-        private DataSheet m_OutputFileSymbols;
         private DataSheet m_OtherSymbols;
-        private DataSheet m_OutputRasterFiles;
+        private DataSheet m_OutputVariable;
+        private DataSheet m_OutputVariableRaster;
         private InputFileMap m_InputFileMap;
-        private string m_MinimumIteration;
-        private string m_MaximumIteration;
-        private string m_MinimumTimestep;
-        private string m_MaximumTimestep;
+        private int m_MinimumIteration;
+        private int m_MaximumIteration;
+        private int m_MinimumTimestep;
+        private int m_MaximumTimestep;
         private string m_TemplateFileName;
         private string m_ExperimentName;
         private const string DEFAULT_NETLOGO_FOLDER = "NetLogo 6.0";
@@ -43,17 +43,17 @@ namespace SyncroSim.NetLogo
         {
             this.m_RunControl = this.ResultScenario.GetDataSheet("NetLogo_RunControl");
             this.m_InputFileSymbols = this.ResultScenario.GetDataSheet("NetLogo_InputFileSymbol");
-            this.m_OutputFileSymbols = this.ResultScenario.GetDataSheet("NetLogo_OutputFileSymbol");
             this.m_OtherSymbols = this.ResultScenario.GetDataSheet("NetLogo_OtherSymbol");
-            this.m_OutputRasterFiles = this.ResultScenario.GetDataSheet("NetLogo_OutputRasterFile");
+            this.m_OutputVariable = this.ResultScenario.GetDataSheet("NetLogo_OutputVariable");
+            this.m_OutputVariableRaster = this.ResultScenario.GetDataSheet("NetLogo_OutputVariableRaster");
         }
 
         private void InitializeRunControl()
         {
-            this.m_MinimumIteration = Convert.ToString(this.GetRunControlValue("MinimumIteration"), CultureInfo.InvariantCulture);
-            this.m_MaximumIteration = Convert.ToString(this.GetRunControlValue("MaximumIteration"), CultureInfo.InvariantCulture);
-            this.m_MinimumTimestep= Convert.ToString(this.GetRunControlValue("MinimumTimestep"), CultureInfo.InvariantCulture);
-            this.m_MaximumTimestep = Convert.ToString(this.GetRunControlValue("MaximumTimestep"), CultureInfo.InvariantCulture);
+            this.m_MinimumIteration = Convert.ToInt32(this.GetRunControlValue("MinimumIteration"), CultureInfo.InvariantCulture);
+            this.m_MaximumIteration = Convert.ToInt32(this.GetRunControlValue("MaximumIteration"), CultureInfo.InvariantCulture);
+            this.m_MinimumTimestep= Convert.ToInt32(this.GetRunControlValue("MinimumTimestep"), CultureInfo.InvariantCulture);
+            this.m_MaximumTimestep = Convert.ToInt32(this.GetRunControlValue("MaximumTimestep"), CultureInfo.InvariantCulture);
             this.m_TemplateFileName = Convert.ToString(this.GetRunControlValue("TemplateFile"), CultureInfo.InvariantCulture);
             this.m_ExperimentName = Convert.ToString(this.GetRunControlValue("Experiment"), CultureInfo.InvariantCulture);
         }
@@ -91,19 +91,18 @@ namespace SyncroSim.NetLogo
             foreach (DataRow dr in dt.Rows)
             {
                 Nullable<int> Iteration = GetNullableInt(dr, "Iteration");
-                Nullable<int> Timestep = GetNullableInt(dr, "Timestep");
                 string Symbol = (string)dr["Symbol"];
                 string Filename = (string)dr["Filename"];
 
-                this.m_InputFileMap.AddInputFileRecord(Iteration, Timestep, Symbol, Filename);
+                this.m_InputFileMap.AddInputFileRecord(Iteration, Symbol, Filename);
             }
         }
 
-        protected override void OnTimestep(int iteration, int timestep)
+        protected override void OnIteration(int iteration)
         {
-            base.OnTimestep(iteration, timestep);
+            base.OnIteration(iteration);
 
-            string TemplateFileName = this.CreateNetLogoTemplateFile(iteration, timestep);
+            string TemplateFileName = this.CreateNetLogoTemplateFile(iteration);
 
             if (this.IsUserInteractive())
             {
@@ -118,56 +117,56 @@ namespace SyncroSim.NetLogo
                 base.ExternalTransform("java", null, args, null);
             }
 
-            this.RetrieveOutputFiles(iteration, timestep);
+            this.RetrieveOutputFiles(iteration);
         }
 
-        private void RetrieveOutputFiles(int iteration, int timestep)
+        private void RetrieveOutputFiles(int iteration)
         {
-            DataTable OutRastTable = this.m_OutputRasterFiles.GetData();
-            DataTable OutFileSymsTable = this.m_OutputFileSymbols.GetData();
-            string TempFolderName = this.Library.CreateTempFolder("NetLogo", false);
-            string OutRasterFolderName = this.Library.GetFolderName(LibraryFolderType.Output, this.m_OutputRasterFiles, true);
+            //DataTable OutRastTable = this.m_OutputRasterFiles.GetData();
+            //DataTable OutFileSymsTable = this.m_OutputFileSymbols.GetData();
+            //string TempFolderName = this.Library.CreateTempFolder("NetLogo", false);
+            //string OutRasterFolderName = this.Library.GetFolderName(LibraryFolderType.Output, this.m_OutputRasterFiles, true);
 
-            foreach (DataRow dr in OutFileSymsTable.Rows)
-            {
-                string BaseName = (string)dr["Filename"];
-                string SourceFileName = Path.Combine(TempFolderName, BaseName);
+            //foreach (DataRow dr in OutFileSymsTable.Rows)
+            //{
+            //    string BaseName = (string)dr["Filename"];
+            //    string SourceFileName = Path.Combine(TempFolderName, BaseName);
 
-                if (File.Exists(SourceFileName))
-                {
-                    string FormattedBaseName = string.Format(
-                        CultureInfo.InvariantCulture, 
-                        "{0}-It{1}-Ts{2}", 
-                        Path.GetFileNameWithoutExtension(BaseName), 
-                        iteration, timestep);
+            //    if (File.Exists(SourceFileName))
+            //    {
+            //        string FormattedBaseName = string.Format(
+            //            CultureInfo.InvariantCulture, 
+            //            "{0}-It{1}-Ts{2}", 
+            //            Path.GetFileNameWithoutExtension(BaseName), 
+            //            iteration, timestep);
 
-                    string AsciiName = Path.Combine(OutRasterFolderName, FormattedBaseName + ".asc");
-                    string TifName = Path.Combine(OutRasterFolderName, FormattedBaseName + ".tif");
-                    string OtherName = Path.Combine(OutRasterFolderName, FormattedBaseName + Path.GetExtension(SourceFileName));
+            //        string AsciiName = Path.Combine(OutRasterFolderName, FormattedBaseName + ".asc");
+            //        string TifName = Path.Combine(OutRasterFolderName, FormattedBaseName + ".tif");
+            //        string OtherName = Path.Combine(OutRasterFolderName, FormattedBaseName + Path.GetExtension(SourceFileName));
 
-                    if (Path.GetExtension(SourceFileName).ToUpperInvariant() == ".ASC")
-                    {
-                        if (!Translate.GdalTranslate(SourceFileName, TifName, GdalOutputFormat.GTiff, GdalOutputType.Float64, GeoTiffCompressionType.None, null))
-                        {
-                            throw new InvalidOperationException("Cannot translate from ASCII: " + SourceFileName);
-                        }
+            //        if (Path.GetExtension(SourceFileName).ToUpperInvariant() == ".ASC")
+            //        {
+            //            if (!Translate.GdalTranslate(SourceFileName, TifName, GdalOutputFormat.GTiff, GdalOutputType.Float64, GeoTiffCompressionType.None, null))
+            //            {
+            //                throw new InvalidOperationException("Cannot translate from ASCII: " + SourceFileName);
+            //            }
 
-                        OutRastTable.Rows.Add(new object[] { iteration, timestep, Path.GetFileName(TifName) });
-                    }
-                    else if(Path.GetExtension(SourceFileName).ToUpperInvariant() == ".TIF")
-                    {
-                        File.Copy(SourceFileName, AsciiName);
-                        OutRastTable.Rows.Add(new object[] { iteration, timestep, Path.GetFileName(TifName) });
-                    }
-                    else
-                    {
-                        File.Copy(SourceFileName, OtherName);
-                    }
-                }
-            }
+            //            OutRastTable.Rows.Add(new object[] { iteration, timestep, Path.GetFileName(TifName) });
+            //        }
+            //        else if(Path.GetExtension(SourceFileName).ToUpperInvariant() == ".TIF")
+            //        {
+            //            File.Copy(SourceFileName, AsciiName);
+            //            OutRastTable.Rows.Add(new object[] { iteration, timestep, Path.GetFileName(TifName) });
+            //        }
+            //        else
+            //        {
+            //            File.Copy(SourceFileName, OtherName);
+            //        }
+            //    }
+            //}
         }
 
-        private string CreateNetLogoTemplateFile(int iteration, int timestep)
+        private string CreateNetLogoTemplateFile(int iteration)
         {       
             string TempFolderName = this.Library.CreateTempFolder("NetLogo", true);
             string f1 = this.GetRunControlFileName(this.m_TemplateFileName);
@@ -178,12 +177,20 @@ namespace SyncroSim.NetLogo
                 throw new InvalidOperationException("The NetLogo template file was not found.");
             }
 
-            this.WriteNetLogoTemplate(f1, f2, iteration, timestep, TempFolderName);
+            this.WriteNetLogoTemplate(f1, f2, iteration, TempFolderName);
             return f2;
         }
 
-        private void WriteNetLogoTemplate(string source, string target, int iteration, int timestep, string tempFolderName)
+        private void WriteNetLogoTemplate(string source, string target, int iteration, string tempFolderName)
         {
+            string IterString = iteration.ToString(CultureInfo.InvariantCulture);
+            string TickString = (this.m_MaximumTimestep - this.m_MinimumTimestep + 1).ToString(CultureInfo.InvariantCulture);
+            string VariableFileName = Path.Combine(tempFolderName, "OutputVariable.csv");
+            string VariableRasterFileName = Path.Combine(tempFolderName, "OutputVariableRaster.csv");
+
+            string vf = "\"" + VariableFileName.Replace(@"\", @"\\") + "\"";
+            string vrf = "\"" + VariableRasterFileName.Replace(@"\", @"\\") + "\"";
+
             using (StreamReader s = new StreamReader(source))
             {
                 string line;
@@ -192,9 +199,8 @@ namespace SyncroSim.NetLogo
                 {
                     while ((line = s.ReadLine()) != null)
                     {
-                        line = this.ProcessSystemSymbols(line);
-                        line = this.ProcessInputFileSymbols(line, iteration, timestep, tempFolderName);
-                        line = this.ProcessOutputFileSymbols(line, tempFolderName);
+                        line = this.ProcessSystemSymbols(line, IterString, TickString, vf, vrf);
+                        line = this.ProcessInputFileSymbols(line, iteration, tempFolderName);
                         line = this.ProcessOtherSymbols(line);
 
                         t.WriteLine(line);
@@ -203,59 +209,47 @@ namespace SyncroSim.NetLogo
             }
         }
 
-        private string ProcessSystemSymbols(string line)
+        private string ProcessSystemSymbols(
+            string line, 
+            string iteration, 
+            string ticks, 
+            string variableFileName, 
+            string variableRasterFileName)
         {
             string l = line;
 
-            l = l.Replace("%SSIM_MIN_ITERATION%", this.m_MinimumIteration);
-            l = l.Replace("%SSIM_MAX_ITERATION%", this.m_MaximumIteration);
-            l = l.Replace("%SSIM_MIN_TIMESTEP%", this.m_MinimumTimestep);
-            l = l.Replace("%SSIM_MAX_TIMESTEP%", this.m_MaximumTimestep);
+            l = l.Replace("%SSIM_ITERATION%", iteration);
+            l = l.Replace("%SSIM_TICKS%", ticks);
+            l = l.Replace("%SSIM_VARIABLE_FILENAME%", variableFileName);
+            l = l.Replace("%SSIM_VARIABLE_RASTER_FILENAME%", variableRasterFileName);
 
             return (l);
         }
 
-        private string ProcessInputFileSymbols(string line, int iteration, int timestep, string tempFolderName)
+        private string ProcessInputFileSymbols(string line, int iteration, string tempFolderName)
         {
             string l = line;
-            List<InputFileRecord> recs = this.m_InputFileMap.GetInputFileRecords(iteration, timestep);
+            List<InputFileRecord> recs = this.m_InputFileMap.GetInputFileRecords(iteration);
 
-            foreach (InputFileRecord r in recs)
-            {          
-                string sym = "%" + r.Symbol + "%";
-
-                if (l.Contains(sym))
-                {
-                    string f1 = this.GetInputFileName(r.Filename);
-                    string f2 = Path.Combine(tempFolderName, r.Filename);
-                    string val = "\"" + f2.Replace(@"\", @"\\") + "\"";
-
-                    l = l.Replace(sym, val);
-
-                    if (!File.Exists(f2))
-                    {
-                        File.Copy(f1, f2);
-                    }
-                }
-            }       
-
-            return (l);
-        }
-
-        private string ProcessOutputFileSymbols(string line, string tempFolderName)
-        {
-            string l = line;
-
-            foreach (DataRow dr in this.m_OutputFileSymbols.GetData().Rows)
+            if (recs != null)
             {
-                string sym = "%" + (string)dr["Symbol"] + "%";
-
-                if (l.Contains(sym))
+                foreach (InputFileRecord r in recs)
                 {
-                    string f1 = Path.Combine(tempFolderName, (string)dr["Filename"]);
-                    string val = "\"" + f1.Replace(@"\", @"\\") + "\"";
+                    string sym = "%" + r.Symbol + "%";
 
-                    l = l.Replace(sym, val);
+                    if (l.Contains(sym))
+                    {
+                        string f1 = this.GetInputFileName(r.Filename);
+                        string f2 = Path.Combine(tempFolderName, r.Filename);
+                        string val = "\"" + f2.Replace(@"\", @"\\") + "\"";
+
+                        l = l.Replace(sym, val);
+
+                        if (!File.Exists(f2))
+                        {
+                            File.Copy(f1, f2);
+                        }
+                    }
                 }
             }
 
