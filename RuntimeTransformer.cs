@@ -102,7 +102,9 @@ namespace SyncroSim.NetLogo
         {
             base.OnIteration(iteration);
 
-            string TemplateFileName = this.CreateNetLogoTemplateFile(iteration);
+            string NetLogoFolderName = this.Library.CreateTempFolder("NetLogo", true);
+            string DataFolderName = Path.Combine(this.Library.GetFolderName(LibraryFolderType.Temporary), "Data");
+            string TemplateFileName = this.CreateNetLogoTemplateFile(iteration, NetLogoFolderName, DataFolderName);
 
             if (this.IsUserInteractive())
             {
@@ -116,90 +118,61 @@ namespace SyncroSim.NetLogo
 
                 base.ExternalTransform("java", null, args, null);
             }
-
-            this.RetrieveOutputFiles(iteration);
         }
 
-        private void RetrieveOutputFiles(int iteration)
+        protected override void ProcessExternalData()
         {
-            //DataTable OutRastTable = this.m_OutputRasterFiles.GetData();
-            //DataTable OutFileSymsTable = this.m_OutputFileSymbols.GetData();
-            //string TempFolderName = this.Library.CreateTempFolder("NetLogo", false);
-            //string OutRasterFolderName = this.Library.GetFolderName(LibraryFolderType.Output, this.m_OutputRasterFiles, true);
+            string NetLogoFolderName = this.Library.CreateTempFolder("NetLogo", false);
+            this.ConvertAllASCFilesToTIF(NetLogoFolderName);
 
-            //foreach (DataRow dr in OutFileSymsTable.Rows)
-            //{
-            //    string BaseName = (string)dr["Filename"];
-            //    string SourceFileName = Path.Combine(TempFolderName, BaseName);
-
-            //    if (File.Exists(SourceFileName))
-            //    {
-            //        string FormattedBaseName = string.Format(
-            //            CultureInfo.InvariantCulture, 
-            //            "{0}-It{1}-Ts{2}", 
-            //            Path.GetFileNameWithoutExtension(BaseName), 
-            //            iteration, timestep);
-
-            //        string AsciiName = Path.Combine(OutRasterFolderName, FormattedBaseName + ".asc");
-            //        string TifName = Path.Combine(OutRasterFolderName, FormattedBaseName + ".tif");
-            //        string OtherName = Path.Combine(OutRasterFolderName, FormattedBaseName + Path.GetExtension(SourceFileName));
-
-            //        if (Path.GetExtension(SourceFileName).ToUpperInvariant() == ".ASC")
-            //        {
-            //            if (!Translate.GdalTranslate(SourceFileName, TifName, GdalOutputFormat.GTiff, GdalOutputType.Float64, GeoTiffCompressionType.None, null))
-            //            {
-            //                throw new InvalidOperationException("Cannot translate from ASCII: " + SourceFileName);
-            //            }
-
-            //            OutRastTable.Rows.Add(new object[] { iteration, timestep, Path.GetFileName(TifName) });
-            //        }
-            //        else if(Path.GetExtension(SourceFileName).ToUpperInvariant() == ".TIF")
-            //        {
-            //            File.Copy(SourceFileName, AsciiName);
-            //            OutRastTable.Rows.Add(new object[] { iteration, timestep, Path.GetFileName(TifName) });
-            //        }
-            //        else
-            //        {
-            //            File.Copy(SourceFileName, OtherName);
-            //        }
-            //    }
-            //}
+            base.ProcessExternalData();
         }
 
-        private string CreateNetLogoTemplateFile(int iteration)
-        {       
-            string TempFolderName = this.Library.CreateTempFolder("NetLogo", true);
-            string f1 = this.GetRunControlFileName(this.m_TemplateFileName);
-            string f2 = Path.Combine(TempFolderName, this.m_TemplateFileName);
+        private void ConvertAllASCFilesToTIF(string tempFolderName)
+        {
+            string[] Files = Directory.GetFiles(tempFolderName);
 
-            if (!File.Exists(f1))
+            foreach (string SourceFileName in Files)
             {
-                throw new InvalidOperationException("The NetLogo template file was not found.");
-            }
+                if (Path.GetExtension(SourceFileName).ToUpperInvariant() == ".ASC")
+                {
+                    string n = Path.GetFileNameWithoutExtension(SourceFileName);
+                    string TifName = Path.Combine(tempFolderName, n + ".tif");
 
-            this.WriteNetLogoTemplate(f1, f2, iteration, TempFolderName);
-            return f2;
+                    if (!Translate.GdalTranslate(SourceFileName, TifName, GdalOutputFormat.GTiff, GdalOutputType.Float64, GeoTiffCompressionType.None, null))
+                    {
+                        throw new InvalidOperationException("Cannot translate from Raster ASCII format: " + SourceFileName);
+                    }
+                }
+            }
         }
 
-        private void WriteNetLogoTemplate(string source, string target, int iteration, string tempFolderName)
-        {
-            string IterString = iteration.ToString(CultureInfo.InvariantCulture);
+        private string CreateNetLogoTemplateFile(int iteration, string tempFolderName, string dataFolderName)
+        {       
+            string SourceTemplateFile = this.GetRunControlFileName(this.m_TemplateFileName);
+            string TargetTemplateFile = Path.Combine(tempFolderName, this.m_TemplateFileName);
+            string IterationString = iteration.ToString(CultureInfo.InvariantCulture);
             string TickString = (this.m_MaximumTimestep - this.m_MinimumTimestep + 1).ToString(CultureInfo.InvariantCulture);
-            string VariableFileName = Path.Combine(tempFolderName, "OutputVariable.csv");
-            string VariableRasterFileName = Path.Combine(tempFolderName, "OutputVariableRaster.csv");
-
+            string VariableFileName = Path.Combine(dataFolderName, "NetLogo_OutputVariable.csv");
+            string VariableRasterFileName = Path.Combine(dataFolderName, "NetLogo_OutputVariableRaster.csv");
             string vf = "\"" + VariableFileName.Replace(@"\", @"\\") + "\"";
             string vrf = "\"" + VariableRasterFileName.Replace(@"\", @"\\") + "\"";
+            string tfn = "\"" + tempFolderName.Replace(@"\", @"\\") + "\"";
 
-            using (StreamReader s = new StreamReader(source))
+            if (!File.Exists(SourceTemplateFile))
+            {
+                throw new InvalidOperationException("The NetLogo template file was not found: " + SourceTemplateFile);
+            }
+
+            using (StreamReader s = new StreamReader(SourceTemplateFile))
             {
                 string line;
 
-                using (StreamWriter t = new StreamWriter(target))
+                using (StreamWriter t = new StreamWriter(TargetTemplateFile))
                 {
                     while ((line = s.ReadLine()) != null)
                     {
-                        line = this.ProcessSystemSymbols(line, IterString, TickString, vf, vrf);
+                        line = this.ProcessSystemSymbols(line, IterationString, TickString, vf, vrf, tfn);
                         line = this.ProcessInputFileSymbols(line, iteration, tempFolderName);
                         line = this.ProcessOtherSymbols(line);
 
@@ -207,21 +180,25 @@ namespace SyncroSim.NetLogo
                     }
                 }
             }
+
+            return TargetTemplateFile;
         }
 
         private string ProcessSystemSymbols(
             string line, 
-            string iteration, 
-            string ticks, 
+            string iterationString, 
+            string tickString, 
             string variableFileName, 
-            string variableRasterFileName)
+            string variableRasterFileName,
+            string tempFolderName)
         {
             string l = line;
-
-            l = l.Replace("%SSIM_ITERATION%", iteration);
-            l = l.Replace("%SSIM_TICKS%", ticks);
+          
+            l = l.Replace("%SSIM_ITERATION%", iterationString);
+            l = l.Replace("%SSIM_TICKS%", tickString);
             l = l.Replace("%SSIM_VARIABLE_FILENAME%", variableFileName);
             l = l.Replace("%SSIM_VARIABLE_RASTER_FILENAME%", variableRasterFileName);
+            l = l.Replace("%SSIM_NETLOGO_TEMP_FOLDER%", tempFolderName);  
 
             return (l);
         }
