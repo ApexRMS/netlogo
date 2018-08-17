@@ -15,6 +15,7 @@ namespace SyncroSim.NetLogo
     {
         private string m_ExeName;
         private string m_JarFileName;
+        private string m_ExtensionDir;
         private DataSheet m_RunControl;
         private DataSheet m_InputFileSymbols;
         private DataSheet m_OtherSymbols;
@@ -74,10 +75,12 @@ namespace SyncroSim.NetLogo
         {
             string AppDir = Path.Combine(Path.GetDirectoryName(this.m_ExeName), "app");
             string[] Files = Directory.GetFiles(AppDir, "netlogo-*.jar");
+            string ExtDir = Path.Combine(AppDir, "extensions");
 
             if (Files.Length == 1)
             {
                 this.m_JarFileName = Files[0];
+                this.m_ExtensionDir = ExtDir;
             }
             else
             {
@@ -115,8 +118,8 @@ namespace SyncroSim.NetLogo
             else
             {
                 string args = string.Format(CultureInfo.InvariantCulture,
-                    "-Xmx1024m -Dfile.encoding=UTF-8 -cp \"{0}\" org.nlogo.headless.Main --model \"{1}\" --experiment {2}",
-                    this.m_JarFileName, TemplateFileName, this.m_ExperimentName);
+                    "-Xmx1024m -Dfile.encoding=UTF-8 -Dnetlogo.extensions.dir=\"{0}\" -Dcom.sun.media.jai.disableMediaLib=true -cp \"{1}\" org.nlogo.headless.Main --model \"{2}\" --experiment {3}",
+                    this.m_ExtensionDir, this.m_JarFileName, TemplateFileName, this.m_ExperimentName);
 
                 base.ExternalTransform("java", null, args, null);
             }
