@@ -18,6 +18,7 @@ namespace SyncroSim.NetLogo
         private string m_JarFileName;
         private string m_ExtensionDir;
         private DataSheet m_RunControl;
+        private DataSheet m_Script;
         private DataSheet m_InputFileSymbols;
         private DataSheet m_OtherSymbols;
         private DataSheet m_OutputVariable;
@@ -38,6 +39,7 @@ namespace SyncroSim.NetLogo
 
             this.InitializeDataSheets();
             this.InitializeRunControl();
+            this.InitializeScript();
             this.InitializeExeName();
             this.InitializeJarFileName();
             this.InitializeInputFiles();
@@ -46,6 +48,7 @@ namespace SyncroSim.NetLogo
         private void InitializeDataSheets()
         {
             this.m_RunControl = this.ResultScenario.GetDataSheet("NetLogo_RunControl");
+            this.m_Script = this.ResultScenario.GetDataSheet("NetLogo_Script");
             this.m_InputFileSymbols = this.ResultScenario.GetDataSheet("NetLogo_InputFileSymbol");
             this.m_OtherSymbols = this.ResultScenario.GetDataSheet("NetLogo_OtherSymbol");
             this.m_OutputVariable = this.ResultScenario.GetDataSheet("NetLogo_OutputVariable");
@@ -58,8 +61,12 @@ namespace SyncroSim.NetLogo
             this.m_MaximumIteration = Convert.ToInt32(this.GetRunControlValue("MaximumIteration"), CultureInfo.InvariantCulture);
             this.m_MinimumTimestep= Convert.ToInt32(this.GetRunControlValue("MinimumTimestep"), CultureInfo.InvariantCulture);
             this.m_MaximumTimestep = Convert.ToInt32(this.GetRunControlValue("MaximumTimestep"), CultureInfo.InvariantCulture);
-            this.m_TemplateFileName = Convert.ToString(this.GetRunControlValue("TemplateFile"), CultureInfo.InvariantCulture);
-            this.m_ExperimentName = Convert.ToString(this.GetRunControlValue("Experiment"), CultureInfo.InvariantCulture);
+        }
+
+        private void InitializeScript()
+        {
+            this.m_TemplateFileName = Convert.ToString(this.GetScriptValue("TemplateFile"), CultureInfo.InvariantCulture);
+            this.m_ExperimentName = Convert.ToString(this.GetScriptValue("Experiment"), CultureInfo.InvariantCulture);
         }
 
         private void InitializeExeName()
@@ -172,7 +179,7 @@ namespace SyncroSim.NetLogo
 
         private string CreateNetLogoTemplateFile(int iteration, string tempFolderName, string dataFolderName)
         {       
-            string SourceTemplateFile = this.GetRunControlFileName(this.m_TemplateFileName);
+            string SourceTemplateFile = this.GetScriptFileName(this.m_TemplateFileName);
             string TargetTemplateFile = Path.Combine(tempFolderName, this.m_TemplateFileName);
             string IterationString = iteration.ToString(CultureInfo.InvariantCulture);
             string TickString = (this.m_MaximumTimestep - this.m_MinimumTimestep).ToString(CultureInfo.InvariantCulture);
@@ -283,6 +290,18 @@ namespace SyncroSim.NetLogo
             return dr[columnName];
         }
 
+        private object GetScriptValue(string columnName)
+        {
+            DataRow dr = this.m_Script.GetDataRow();
+
+            if (dr == null || dr[columnName] == DBNull.Value)
+            {
+                throw new ArgumentException("The run control data is missing for: " + columnName);
+            }
+
+            return dr[columnName];
+        }
+
         private static int? GetNullableInt(DataRow dr, string columnName)
         {
             object value = dr[columnName];
@@ -297,9 +316,9 @@ namespace SyncroSim.NetLogo
             }
         }
 
-        private string GetRunControlFileName(string fileName)
+        private string GetScriptFileName(string fileName)
         {
-            string f = this.Library.GetFolderName(LibraryFolderType.Input, this.m_RunControl, false);
+            string f = this.Library.GetFolderName(LibraryFolderType.Input, this.m_Script, false);
             return (Path.Combine(f, fileName));
         }
 

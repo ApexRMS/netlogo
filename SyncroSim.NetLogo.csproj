@@ -91,6 +91,12 @@
       <DependentUpon>RunControlDataFeedView.cs</DependentUpon>
     </Compile>
     <Compile Include="RuntimeTransformer.cs" />
+    <Compile Include="ScriptDataFeedView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ScriptDataFeedView.Designer.cs">
+      <DependentUpon>ScriptDataFeedView.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Common\SyncroSim.Common.csproj">
@@ -120,6 +126,9 @@
   <ItemGroup>
     <EmbeddedResource Include="RunControlDataFeedView.resx">
       <DependentUpon>RunControlDataFeedView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ScriptDataFeedView.resx">
+      <DependentUpon>ScriptDataFeedView.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
