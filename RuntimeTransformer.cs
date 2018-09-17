@@ -8,6 +8,7 @@ using SyncroSim.Core;
 using SyncroSim.StochasticTime;
 using System.Globalization;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 
 namespace SyncroSim.NetLogo
 {
@@ -123,6 +124,23 @@ namespace SyncroSim.NetLogo
 
                 base.ExternalTransform("java", null, args, null);
             }
+        }
+
+        protected override void ExecuteProcess(string programName, string arguments, StringDictionary environment)
+        {
+            // This module is unusual in that it changes the external executable name when running in headless mode.
+            // This, however, does not work if the SSIM_WINDOWS_EXECUTABLE_LOCATION environment variable has already been
+            // configured to point to NetLogo.exe.  So, in this case, we remove the key.
+
+            if (programName == "java")
+            {
+                if (environment.ContainsKey("SSIM_WINDOWS_EXECUTABLE_LOCATION"))
+                {          
+                     environment.Remove("SSIM_WINDOWS_EXECUTABLE_LOCATION");
+                }
+            }
+
+            base.ExecuteProcess(programName, arguments, environment);
         }
 
         protected override void ProcessExternalData()
