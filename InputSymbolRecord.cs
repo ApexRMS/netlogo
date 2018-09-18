@@ -3,15 +3,15 @@
 
 namespace SyncroSim.NetLogo
 {
-    class InputFileRecord
+    class InputSymbolRecord
     {
         private string m_Symbol;
-        private string m_Filename;
+        private string m_Value;
 
-        public InputFileRecord(string symbol, string fileName)
+        public InputSymbolRecord(string symbol, string value)
         {
             this.m_Symbol = symbol;
-            this.m_Filename = fileName;
+            this.m_Value = value;
         }
 
         public string Symbol
@@ -22,11 +22,11 @@ namespace SyncroSim.NetLogo
             }
         }
 
-        public string Filename
+        public string Value
         {
             get
             {
-                return m_Filename;
+                return m_Value;
             }
         }
     }

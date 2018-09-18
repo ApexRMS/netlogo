@@ -81,8 +81,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assembly.cs" />
-    <Compile Include="InputFileMap.cs" />
-    <Compile Include="InputFileRecord.cs" />
+    <Compile Include="InputSymbolMap.cs" />
+    <Compile Include="InputSymbolRecord.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RunControlDataFeedView.cs">
       <SubType>UserControl</SubType>
