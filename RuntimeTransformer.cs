@@ -142,7 +142,7 @@ namespace SyncroSim.NetLogo
             foreach (DataRow dr in dt.Rows)
             {
                 Nullable<int> Iteration = GetNullableInt(dr, "Iteration");
-                string Symbol = "%" + this.m_SymbolMap[(int)dr["SymbolID"]] + "%";
+                string Symbol = "%" + this.m_SymbolMap[(int)(long)dr["SymbolID"]] + "%";
                 string Filename = (string)dr["Filename"];
 
                 if (Symbol.Contains(" "))
@@ -163,7 +163,7 @@ namespace SyncroSim.NetLogo
         {
             base.OnIteration(iteration);
 
-            string NetLogoFolderName = this.Library.CreateTempFolder("NetLogo", true);
+            string NetLogoFolderName = this.Library.CreateTempFolder("NetLogo", false);
             string DataFolderName = Path.Combine(this.Library.GetFolderName(LibraryFolderType.Temporary), "Data");
             string TemplateFileName = this.CreateNetLogoTemplateFile(iteration, NetLogoFolderName, DataFolderName);
 
@@ -227,7 +227,8 @@ namespace SyncroSim.NetLogo
 
         private string CreateNetLogoTemplateFile(int iteration, string tempFolderName, string dataFolderName)
         {
-            List<InputSymbolRecord> Symbols = this.m_InputMap.GetSymbols(iteration);
+            List<InputSymbolRecord> InputSymbols = this.m_InputMap.GetSymbols(iteration);
+            List<InputSymbolRecord> InputFileSymbols = this.m_InputFileMap.GetSymbols(iteration);
             string SourceTemplateFile = this.GetScriptFileName(this.m_TemplateFileName);
             string TargetTemplateFile = Path.Combine(tempFolderName, this.m_TemplateFileName);
             string IterationString = iteration.ToString(CultureInfo.InvariantCulture);
@@ -252,8 +253,8 @@ namespace SyncroSim.NetLogo
                     while ((line = s.ReadLine()) != null)
                     {
                         line = this.ProcessSystemSymbols(line, IterationString, TickString, vf, vrf, tfn);
-                        line = this.ProcessInputSymbols(line, iteration, Symbols);
-                        line = this.ProcessInputFileSymbols(line, iteration, tempFolderName, Symbols);
+                        line = this.ProcessInputSymbols(line, iteration, InputSymbols);
+                        line = this.ProcessInputFileSymbols(line, iteration, tempFolderName, InputFileSymbols);
 
                         t.WriteLine(line);
                     }
