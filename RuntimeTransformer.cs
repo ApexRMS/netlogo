@@ -18,18 +18,13 @@ namespace SyncroSim.NetLogo
         private string m_JarFileName;
         private string m_ExtensionDir;
         private DataSheet m_SymbolDataSheet;
-        private DataSheet m_OutputVariableDataSheet;
         private DataSheet m_RunControlDataSheet;
         private DataSheet m_ScriptDataSheet;
         private DataSheet m_InputDataSheet;
         private DataSheet m_InputFileDataSheet;
-        private DataSheet m_OutputDataSheet;
-        private DataSheet m_OutputRasterDataSheet;
         private Dictionary<int, string> m_SymbolMap;
         private InputSymbolMap m_InputMap;
         private InputSymbolMap m_InputFileMap;
-        private int m_MinimumIteration;
-        private int m_MaximumIteration;
         private int m_MinimumTimestep;
         private int m_MaximumTimestep;
         private string m_TemplateFileName;
@@ -54,19 +49,14 @@ namespace SyncroSim.NetLogo
         private void InitializeDataSheets()
         {
             this.m_SymbolDataSheet = this.Project.GetDataSheet("NetLogo_Symbol");
-            this.m_OutputVariableDataSheet = this.Project.GetDataSheet("NetLogo_OutputVariable");
             this.m_RunControlDataSheet = this.ResultScenario.GetDataSheet("NetLogo_RunControl");
             this.m_ScriptDataSheet = this.ResultScenario.GetDataSheet("NetLogo_Script");
             this.m_InputDataSheet = this.ResultScenario.GetDataSheet("NetLogo_Input");
             this.m_InputFileDataSheet = this.ResultScenario.GetDataSheet("NetLogo_InputFile");
-            this.m_OutputDataSheet = this.ResultScenario.GetDataSheet("NetLogo_Output");
-            this.m_OutputRasterDataSheet = this.ResultScenario.GetDataSheet("NetLogo_OutputRaster");
         }
 
         private void InitializeRunControl()
         {
-            this.m_MinimumIteration = Convert.ToInt32(this.GetRunControlValue("MinimumIteration"), CultureInfo.InvariantCulture);
-            this.m_MaximumIteration = Convert.ToInt32(this.GetRunControlValue("MaximumIteration"), CultureInfo.InvariantCulture);
             this.m_MinimumTimestep = Convert.ToInt32(this.GetRunControlValue("MinimumTimestep"), CultureInfo.InvariantCulture);
             this.m_MaximumTimestep = Convert.ToInt32(this.GetRunControlValue("MaximumTimestep"), CultureInfo.InvariantCulture);
         }
@@ -201,12 +191,12 @@ namespace SyncroSim.NetLogo
         protected override void ProcessExternalData()
         {
             string NetLogoFolderName = this.Library.CreateTempFolder("NetLogo", false);
-            this.ConvertAllASCFilesToTIF(NetLogoFolderName);
+            ConvertAllASCFilesToTIF(NetLogoFolderName);
 
             base.ProcessExternalData();
         }
 
-        private void ConvertAllASCFilesToTIF(string tempFolderName)
+        private static void ConvertAllASCFilesToTIF(string tempFolderName)
         {
             string[] Files = Directory.GetFiles(tempFolderName);
 
@@ -252,9 +242,9 @@ namespace SyncroSim.NetLogo
                 {
                     while ((line = s.ReadLine()) != null)
                     {
-                        line = this.ProcessSystemSymbols(line, IterationString, TickString, vf, vrf, tfn);
-                        line = this.ProcessInputSymbols(line, iteration, InputSymbols);
-                        line = this.ProcessInputFileSymbols(line, iteration, tempFolderName, InputFileSymbols);
+                        line = ProcessSystemSymbols(line, IterationString, TickString, vf, vrf, tfn);
+                        line = ProcessInputSymbols(line, InputSymbols);
+                        line = this.ProcessInputFileSymbols(line, tempFolderName, InputFileSymbols);
 
                         t.WriteLine(line);
                     }
@@ -264,7 +254,7 @@ namespace SyncroSim.NetLogo
             return TargetTemplateFile;
         }
 
-        private string ProcessSystemSymbols(
+        private static string ProcessSystemSymbols(
             string line,
             string iterationString,
             string tickString,
@@ -283,7 +273,7 @@ namespace SyncroSim.NetLogo
             return (l);
         }
 
-        private string ProcessInputSymbols(string line, int iteration, List<InputSymbolRecord> symbols)
+        private static string ProcessInputSymbols(string line, List<InputSymbolRecord> symbols)
         {
             string l = line;
 
@@ -301,7 +291,7 @@ namespace SyncroSim.NetLogo
             return (l);
         }
 
-        private string ProcessInputFileSymbols(string line, int iteration, string tempFolderName, List<InputSymbolRecord> symbols)
+        private string ProcessInputFileSymbols(string line, string tempFolderName, List<InputSymbolRecord> symbols)
         {
             string l = line;
 
