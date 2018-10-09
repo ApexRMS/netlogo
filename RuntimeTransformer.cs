@@ -159,7 +159,7 @@ namespace SyncroSim.NetLogo
 
             if (this.IsUserInteractive())
             {
-                base.ExternalTransform(this.m_ExeName, null, TemplateFileName, null);
+                base.ExternalTransform(this.m_ExeName, null, TemplateFileName, false, null);
             }
             else
             {
@@ -167,11 +167,11 @@ namespace SyncroSim.NetLogo
                     "-Xmx1024m -Dfile.encoding=UTF-8 -Dnetlogo.extensions.dir=\"{0}\" -Dcom.sun.media.jai.disableMediaLib=true -cp \"{1}\" org.nlogo.headless.Main --model \"{2}\" --experiment {3}",
                     this.m_ExtensionDir, this.m_JarFileName, TemplateFileName, this.m_ExperimentName);
 
-                base.ExternalTransform("java", null, args, null);
+                base.ExternalTransform("java", null, args, false, null);
             }
         }
 
-        protected override void ExecuteProcess(string programName, string arguments, StringDictionary environment)
+        protected override void ExecuteProcess(string programName, string arguments, bool reportsProgress, StringDictionary environment)
         {
             // This module is unusual in that it changes the external executable name when running in headless mode.
             // This, however, does not work if the SSIM_WINDOWS_EXECUTABLE_LOCATION environment variable has already been
@@ -185,7 +185,7 @@ namespace SyncroSim.NetLogo
                 }
             }
 
-            base.ExecuteProcess(programName, arguments, environment);
+            base.ExecuteProcess(programName, arguments, false, environment);
         }
 
         protected override void ProcessExternalData()
