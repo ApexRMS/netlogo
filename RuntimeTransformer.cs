@@ -207,10 +207,7 @@ namespace SyncroSim.NetLogo
                     string n = Path.GetFileNameWithoutExtension(SourceFileName);
                     string TifName = Path.Combine(tempFolderName, n + ".tif");
 
-                    if (!Translate.GdalTranslate(SourceFileName, TifName, GdalOutputFormat.GTiff, GdalOutputType.Float64, GeoTiffCompressionType.None, null))
-                    {
-                        throw new InvalidOperationException("Cannot translate from Raster ASCII format: " + SourceFileName);
-                    }
+                    Spatial.ConvertFromAAIGridFormat(SourceFileName, TifName, GeoTiffCompressionType.DEFLATE);
                 }
             }
         }
