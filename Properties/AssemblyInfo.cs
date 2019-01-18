@@ -7,10 +7,10 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("SyncroSim.NetLogo")]
-[assembly: AssemblyDescription("SyncroSim NetLogo module")]
+[assembly: AssemblyDescription("SyncroSim NetLogo Package")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("ApexRMS")]
-[assembly: AssemblyProduct("SyncroSim NetLogo module")]
+[assembly: AssemblyProduct("SyncroSim NetLogo Package")]
 [assembly: AssemblyCopyright("Copyright © 2007-2018 Apex Resource Management Solution Ltd. (ApexRMS). All rights reserved.")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
