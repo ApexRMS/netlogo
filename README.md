@@ -1,2 +1,2 @@
-# carep
-A SyncroSim Package for the Caribou Energy Protein Model.
+# netlogo
+A SyncroSim Module for running NetLogo simulations.
