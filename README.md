@@ -1,2 +1,2 @@
 # netlogo
-A SyncroSim Module for running NetLogo simulations.
+SyncroSim Base Package for running the NetLogo agent-based modeling environment.
