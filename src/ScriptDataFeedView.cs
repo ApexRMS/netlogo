@@ -41,7 +41,7 @@ namespace SyncroSim.NetLogo
 
             if (dlg.ShowDialog(this) == DialogResult.OK)
             {
-                DataSheet ds = this.DataFeed.GetDataSheet("NetLogo_Script");
+                DataSheet ds = this.DataFeed.GetDataSheet("netlogo_Script");
 
                 ds.AddExternalInputFile(dlg.FileName);
                 ds.SetSingleRowData("TemplateFile", Path.GetFileName(dlg.FileName));

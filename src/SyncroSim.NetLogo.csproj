@@ -114,7 +114,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="package.config" />
+    <Content Include="package.xml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="RunControlDataFeedView.resx">

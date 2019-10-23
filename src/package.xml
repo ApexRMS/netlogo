@@ -1,0 +1,193 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<package name="netlogo" displayName="Runs the NetLogo agent-based modeling environment" version="1.1.0" url="https://github.com/ApexRMS/netlogo">
+  <transformers>
+    <transformer
+        name="Primary"
+        displayName="NetLogo"
+        className="SyncroSim.NetLogo.RuntimeTransformer"
+        classAssembly="SyncroSim.NetLogo"
+        environmentSheet="Environment"
+        configurationSheet="RunControl"
+        isPrimary="True">
+      <include>
+        <transformer name="corestime_Runtime"/>
+      </include>
+      <datafeeds>
+        <datafeed name="Environment" displayName="NetLogo" dataScope="Library">
+          <datasheets>
+            <datasheet name="Environment" displayName="NetLogo" installationFolder="NetLogo 6.0">
+              <columns>
+                <column name="EnvironmentID" dataType="Integer" isPrimary="True"/>
+                <column name="Name" dataType="String" allowDbNull="False"/>
+                <column name="Value" dataType="String" allowDbNull="False"/>
+              </columns>
+            </datasheet>
+          </datasheets>
+        </datafeed>
+        <datafeed name="Symbol" displayName="Symbols" dataScope="Project">
+          <datasheets>
+            <datasheet name="Symbol" displayName="Symbol" valueMember="SymbolID" displayMember="Description">
+              <columns>
+                <column name="SymbolID" dataType="Integer" isPrimary="True"/>
+                <column name="ProjectID" dataType="Integer"/>
+                <column name="Name" dataType="String"/>
+                <column name="Description" displayName="Display Name" dataType="String"/>
+              </columns>
+              <validations>
+                <validation validationType="Unique" columns="Name"/>
+              </validations>
+            </datasheet>
+          </datasheets>
+        </datafeed>
+        <datafeed name="OutputVariable" displayName="Output Variables" dataScope="Project">
+          <datasheets>
+            <datasheet name="OutputVariable" displayName="Output Variables" valueMember="OutputVariableID" displayMember="Description">
+              <columns>
+                <column name="OutputVariableID" dataType="Integer" isPrimary="True"/>
+                <column name="ProjectID" dataType="Integer"/>
+                <column name="Name" dataType="String"/>
+                <column name="Description" dataType="String"/>
+              </columns>
+              <validations>
+                <validation validationType="Unique" columns="Name"/>
+              </validations>
+            </datasheet>
+          </datasheets>
+        </datafeed>
+        <datafeed name="RunControl" displayName="Run Control" dataScope="Scenario">
+          <datasheets>
+            <datasheet name="RunControl" displayName="Run Control" isSingleRow="True">
+              <columns>
+                <column name="InputID" dataType="Integer" isPrimary="True"/>
+                <column name="ScenarioID" dataType="Integer"/>
+                <column name="MinimumIteration" displayName="Minimum Iteration" dataType="Integer" defaultValue="1" validationType="WholeNumber" validationCondition="GreaterEqual" formula1="1"/>
+                <column name="MaximumIteration" displayName="Maximum Iteration" dataType="Integer" defaultValue="1" validationType="WholeNumber" validationCondition="GreaterEqual" formula1="1" format="d"/>
+                <column name="MinimumTimestep" displayName="Minimum Timestep" dataType="Integer" defaultValue="0" validationType="WholeNumber" validationCondition="GreaterEqual" formula1="0" format="d"/>
+                <column name="MaximumTimestep" displayName="Maximum Timestep" dataType="Integer" defaultValue="0" validationType="WholeNumber" validationCondition="GreaterEqual" formula1="0" format="d"/>
+              </columns>
+            </datasheet>
+          </datasheets>
+        </datafeed>
+        <datafeed name="Script" displayName="Script" dataScope="Scenario">
+          <datasheets>
+            <datasheet name="Script" displayName="Script" isSingleRow="True">
+              <columns>
+                <column name="ScriptID" dataType="Integer" isPrimary="True"/>
+                <column name="ScenarioID" dataType="Integer"/>
+                <column name="TemplateFile" displayName="NetLogo Template File" dataType="String" isExternalFile="True" externalFileFilter="NetLogo Files|*.nlogo"/>
+                <column name="Experiment" dataType="String" defaultValue="experiment"/>
+              </columns>
+            </datasheet>
+          </datasheets>
+        </datafeed>
+        <datafeed name="Input" displayName="Inputs" dataScope="Scenario">
+          <datasheets>
+            <datasheet name="Input" displayName="Inputs">
+              <columns>
+                <column name="InputID" dataType="Integer" isPrimary="True"/>
+                <column name="ScenarioID" dataType="Integer"/>
+                <column name="Iteration" dataType="Integer" validationType="WholeNumber" validationCondition="Greater" formula1="0" format="d" isOptional="True"/>
+                <column name="SymbolID" displayName="Symbol" dataType="Integer" validationType="Datasheet" formula1="Symbol" allowDbNull="False"/>
+                <column name="Value" dataType="String" allowDbNull="False"/>
+              </columns>
+              <validations>
+                <validation validationType="Unique" columns="Iteration|SymbolID"/>
+              </validations>
+            </datasheet>
+          </datasheets>
+        </datafeed>
+        <datafeed name="InputFile" displayName="Input Files" dataScope="Scenario">
+          <datasheets>
+            <datasheet name="InputFile" displayName="Input Files">
+              <columns>
+                <column name="InputFileID" dataType="Integer" isPrimary="True"/>
+                <column name="ScenarioID" dataType="Integer"/>
+                <column name="Iteration" dataType="Integer" validationType="WholeNumber" validationCondition="Greater" formula1="0" format="d" isOptional="True"/>
+                <column name="SymbolID" displayName="Symbol" dataType="Integer" validationType="Datasheet" formula1="Symbol" allowDbNull="False"/>
+                <column name="Filename" displayName="File Name" dataType="String" isExternalFile="True" externalFileFilter="Input Files|*.*" allowDbNull="False"/>
+              </columns>
+              <validations>
+                <validation validationType="Unique" columns="Iteration|SymbolID"/>
+              </validations>
+            </datasheet>
+          </datasheets>
+        </datafeed>
+        <datafeed name="Output" dataScope="Scenario" isOutput="True">
+          <datasheets>
+            <datasheet name="Output">
+              <columns>
+                <column name="ScenarioID" dataType="Integer" isCompositeIndex="True" allowDbNull="False"/>
+                <column name="Iteration" dataType="Integer" isCompositeIndex="True" format="d" allowDbNull="False"/>
+                <column name="Timestep" dataType="Integer" isCompositeIndex="True" format="d" allowDbNull="False"/>
+                <column name="OutputVariableID" displayName="Variable" dataType="Integer" validationType="Datasheet" formula1="OutputVariable" allowDbNull="False"/>
+                <column name="Amount" dataType="Double" allowDbNull="False"/>
+              </columns>
+            </datasheet>
+          </datasheets>
+        </datafeed>
+        <datafeed name="OutputRaster" dataScope="Scenario" isOutput="True">
+          <datasheets>
+            <datasheet name="OutputRaster">
+              <columns>
+                <column name="ScenarioID" dataType="Integer" isCompositeIndex="True" allowDbNull="False"/>
+                <column name="Iteration" dataType="Integer" isCompositeIndex="True" format="d" allowDbNull="False"/>
+                <column name="Timestep" dataType="Integer" isCompositeIndex="True" format="d" allowDbNull="False"/>
+                <column name="OutputVariableID" displayName="Variable" dataType="Integer" validationType="Datasheet" formula1="OutputVariable" allowDbNull="False"/>
+                <column name="Filename" dataType="String" isExternalFile="True" isRaster="True" bandColumn="Band" bandFilterColumn="OutputVariableID" allowDbNull="False"/>
+                <column name="Band" dataType="Integer"/>
+              </columns>
+            </datasheet>
+          </datasheets>
+        </datafeed>
+      </datafeeds>
+    </transformer>
+    <transformer
+      name="ExportRaster" 
+      displayName="Rasters"
+      className="SyncroSim.StochasticTime.Forms.StochasticTimeExportTransformer" 
+      classAssembly="SyncroSim.StochasticTime.Forms"
+      dataSheet="OutputRaster" 
+      column="Filename" 
+      isFolderExport="True" >
+    </transformer>
+  </transformers>
+  <layouts>
+    <layout name="coreforms_LibraryDatafeeds">
+      <item name="core_SysFolder"/>
+      <item name="core_Backup"/>
+      <item name="core_Multiprocessing"/>
+      <group name="Options">
+        <item name="core_Options" displayName="General"/>
+        <item name="Environment"/>
+      </group>
+    </layout>
+    <layout name="coreforms_ProjectDatafeeds">
+      <item name="Symbol"/>
+      <item name="OutputVariable"/>
+    </layout>
+    <layout name="coreforms_ScenarioDatafeeds">
+      <item name="RunControl"/>
+      <item name="Script"/>
+      <item name="Input"/>
+      <item name="InputFile"/>
+    </layout>
+    <layout name="coreforms_ResultTransformers">
+      <item name="corestime_ChartTransformer"/>
+      <item name="corestime_MapTransformer"/>
+      <group name="Export">
+        <item name="ExportRaster"/>
+      </group>
+    </layout>
+    <layout name="corestimeforms_Maps" configurationSheet="RunControl">
+      <item name="Variables" dataSheet="OutputRaster" column="Filename" filter="OutputVariableID"></item>
+    </layout>
+    <layout name="corestimeforms_Charts" configurationSheet="RunControl">
+      <item name="Variables" dataSheet="Output" column="Amount" filter="OutputVariableID"/>
+    </layout>
+  </layouts>
+  <views>
+    <view name="EnvironmentView" target="Environment" className="SyncroSim.Core.Forms.ExeConfigDataFeedView"  classAssembly="SyncroSim.Core.Forms"/>
+    <view name="RunControlView" target="RunControl" className="SyncroSim.NetLogo.RunControlDataFeedView"  classAssembly="SyncroSim.NetLogo"/>
+    <view name="ScriptView" target="Script" className="SyncroSim.NetLogo.ScriptDataFeedView"  classAssembly="SyncroSim.NetLogo"/>
+  </views>
+</package>

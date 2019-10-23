@@ -48,11 +48,11 @@ namespace SyncroSim.NetLogo
 
         private void InitializeDataSheets()
         {
-            this.m_SymbolDataSheet = this.Project.GetDataSheet("NetLogo_Symbol");
-            this.m_RunControlDataSheet = this.ResultScenario.GetDataSheet("NetLogo_RunControl");
-            this.m_ScriptDataSheet = this.ResultScenario.GetDataSheet("NetLogo_Script");
-            this.m_InputDataSheet = this.ResultScenario.GetDataSheet("NetLogo_Input");
-            this.m_InputFileDataSheet = this.ResultScenario.GetDataSheet("NetLogo_InputFile");
+            this.m_SymbolDataSheet = this.Project.GetDataSheet("netlogo_Symbol");
+            this.m_RunControlDataSheet = this.ResultScenario.GetDataSheet("netlogo_RunControl");
+            this.m_ScriptDataSheet = this.ResultScenario.GetDataSheet("netlogo_Script");
+            this.m_InputDataSheet = this.ResultScenario.GetDataSheet("netlogo_Input");
+            this.m_InputFileDataSheet = this.ResultScenario.GetDataSheet("netlogo_InputFile");
         }
 
         private void InitializeRunControl()
@@ -220,8 +220,8 @@ namespace SyncroSim.NetLogo
             string TargetTemplateFile = Path.Combine(tempFolderName, this.m_TemplateFileName);
             string IterationString = iteration.ToString(CultureInfo.InvariantCulture);
             string TickString = (this.m_MaximumTimestep - this.m_MinimumTimestep).ToString(CultureInfo.InvariantCulture);
-            string VariableFileName = Path.Combine(dataFolderName, "NetLogo_Output.csv");
-            string VariableRasterFileName = Path.Combine(dataFolderName, "NetLogo_OutputRaster.csv");
+            string VariableFileName = Path.Combine(dataFolderName, "netlogo_Output.csv");
+            string VariableRasterFileName = Path.Combine(dataFolderName, "netlogo_OutputRaster.csv");
             string vf = "\"" + VariableFileName.Replace(@"\", @"\\") + "\"";
             string vrf = "\"" + VariableRasterFileName.Replace(@"\", @"\\") + "\"";
             string tfn = "\"" + tempFolderName.Replace(@"\", @"\\") + "\"";
@@ -321,7 +321,8 @@ namespace SyncroSim.NetLogo
 
             if (dr == null || dr[columnName] == DBNull.Value)
             {
-                throw new ArgumentException("The run control data is missing for: " + columnName);
+                string DispName = this.m_RunControlDataSheet.Columns[columnName].DisplayName;
+                throw new ArgumentException("The run control data is missing for: " + DispName);
             }
 
             return dr[columnName];
@@ -333,7 +334,8 @@ namespace SyncroSim.NetLogo
 
             if (dr == null || dr[columnName] == DBNull.Value)
             {
-                throw new ArgumentException("The run control data is missing for: " + columnName);
+                string DispName = this.m_ScriptDataSheet.Columns[columnName].DisplayName;
+                throw new ArgumentException("The script data is missing for: " + DispName);
             }
 
             return dr[columnName];
