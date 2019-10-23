@@ -142,12 +142,12 @@
       </datafeeds>
     </transformer>
     <transformer
-      name="ExportRaster" 
+      name="ExportRaster"
       displayName="Rasters"
-      className="SyncroSim.StochasticTime.Forms.StochasticTimeExportTransformer" 
+      className="SyncroSim.StochasticTime.Forms.StochasticTimeExportTransformer"
       classAssembly="SyncroSim.StochasticTime.Forms"
-      dataSheet="OutputRaster" 
-      column="Filename" 
+      dataSheet="OutputRaster"
+      column="Filename"
       isFolderExport="True" >
     </transformer>
   </transformers>
@@ -179,10 +179,10 @@
       </group>
     </layout>
     <layout name="corestimeforms_Maps" configurationSheet="RunControl">
-      <item name="Variables" dataSheet="OutputRaster" column="Filename" filter="OutputVariableID"></item>
+      <item name="Variables" displayName="Variables" dataSheet="OutputRaster" column="Filename" filter="OutputVariableID"></item>
     </layout>
     <layout name="corestimeforms_Charts" configurationSheet="RunControl">
-      <item name="Variables" dataSheet="Output" column="Amount" filter="OutputVariableID"/>
+      <item name="Variables" displayName="Variables" dataSheet="Output" column="Amount" filter="OutputVariableID"/>
     </layout>
   </layouts>
   <views>
@@ -190,4 +190,9 @@
     <view name="RunControlView" target="RunControl" className="SyncroSim.NetLogo.RunControlDataFeedView"  classAssembly="SyncroSim.NetLogo"/>
     <view name="ScriptView" target="Script" className="SyncroSim.NetLogo.ScriptDataFeedView"  classAssembly="SyncroSim.NetLogo"/>
   </views>
+  <updateProvider
+    schemaVersion="1"
+    minPackageVersion="1.1.0"
+    className="SyncroSim.NetLogo.DBUpdate"
+    classAssembly="SyncroSim.NetLogo"/>
 </package>

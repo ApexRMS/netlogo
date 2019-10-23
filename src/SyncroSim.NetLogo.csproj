@@ -96,6 +96,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assembly.cs" />
+    <Compile Include="DBUpdate.cs" />
     <Compile Include="InputSymbolMap.cs" />
     <Compile Include="InputSymbolRecord.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
