@@ -220,8 +220,8 @@ namespace SyncroSim.NetLogo
             string TargetTemplateFile = Path.Combine(tempFolderName, this.m_TemplateFileName);
             string IterationString = iteration.ToString(CultureInfo.InvariantCulture);
             string TickString = (this.m_MaximumTimestep - this.m_MinimumTimestep).ToString(CultureInfo.InvariantCulture);
-            string VariableFileName = Path.Combine(dataFolderName, "netlogo_Output.csv");
-            string VariableRasterFileName = Path.Combine(dataFolderName, "netlogo_OutputRaster.csv");
+            string VariableFileName = Path.Combine(dataFolderName, "SSIM_APPEND-netlogo_Output.csv");
+            string VariableRasterFileName = Path.Combine(dataFolderName, "SSIM_APPEND-netlogo_OutputRaster.csv");
             string vf = "\"" + VariableFileName.Replace(@"\", @"\\") + "\"";
             string vrf = "\"" + VariableRasterFileName.Replace(@"\", @"\\") + "\"";
             string tfn = "\"" + tempFolderName.Replace(@"\", @"\\") + "\"";
