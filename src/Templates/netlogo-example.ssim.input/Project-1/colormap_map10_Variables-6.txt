@@ -1,0 +1,5 @@
+# Syncrosim Generated Landscape Cover Map Color Map (QGIS-compatible),,,,,
+INTERPOLATION:DISCRETE
+1.0,0,128,0,255,Closed
+2.0,0,255,0,255,Open
+3.0000,128,0,255,255,Invaded
