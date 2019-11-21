@@ -91,10 +91,10 @@ Each line being printed specifies the current iteration, timestep, output variab
 The following code writes a raster of the **landCover** output variable and prints a record to the csv catalog of output rasters to be loaded into the SyncroSim library.
 
 ```netlogo
-gis:store-dataset patches_out (word %SSIM_NETLOGO_TEMP_FOLDER% "\\it" %SSIM_ITERATION% 		".ts" ticks ".landCover.asc")
+gis:store-dataset patches_out (word %SSIM_NETLOGO_TEMP_FOLDER% "\\it" %SSIM_ITERATION% ".ts" ticks ".landCover.asc")
 
 file-open %SSIM_VARIABLE_RASTER_FILENAME%
-file-print csv:to-row (list %SSIM_ITERATION% ticks "Landscape Cover Map" (word 				%SSIM_NETLOGO_TEMP_FOLDER% "\\it" %SSIM_ITERATION% ".ts" ticks ".landCover.tif"))
+file-print csv:to-row (list %SSIM_ITERATION% ticks "Landscape Cover Map" (word %SSIM_NETLOGO_TEMP_FOLDER% "\\it" %SSIM_ITERATION% ".ts" ticks ".landCover.tif"))
 file-close
 
 ```
