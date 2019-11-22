@@ -10,7 +10,6 @@ The [SyncroSim](https://syncrosim.com/) netlogo package is designed to provide a
 1. [Download](https://ccl.northwestern.edu/netlogo/download.shtml) and install NetLogo (Note: a Java runtime environment is required to run NetLogo)
 2. [Install SyncroSim](http://docs.syncrosim.com/getting_started/inst_win.html).
 3. Install the SyncroSim netlogo package ([example of how to install a package](http://docs.syncrosim.com/getting_started/quickstart.html#step-1---install-the-demo-sales-package))
-4.  Note the **NetLogo executable filename** is the full path to the NetLogo.exe executable file. You will need to specify this in your [SyncroSim library properties](http://docs.syncrosim.com/how_to_guides/properties_overview.html) for NetLogo under **File | Library Properties |Options**
 
 ## Getting Started
 
