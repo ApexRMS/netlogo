@@ -159,7 +159,8 @@ namespace SyncroSim.NetLogo
 
             if (this.IsUserInteractive())
             {
-                base.ExternalTransform(this.m_ExeName, null, TemplateFileName, false, null);
+                string Enquoted = "\"" + TemplateFileName + "\"";
+                base.ExternalTransform(this.m_ExeName, null, Enquoted, false, null);
             }
             else
             {
