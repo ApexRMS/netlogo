@@ -28,7 +28,7 @@ title: Getting started
 
 ## **Step 4: Run the NetLogo model**
 1. In the [SyncroSim library explorer](http://docs.syncrosim.com/how_to_guides/library_explorer_overview.html) right click on the scenario called **5 Bugs** and select **Run**.
-2. If you checked **Run in window** in the **Options | NetLogo** library property, you will see the NetLogo GUI open and you will need to press **setup** then **go** followed by **File > Quit**. This will be repeated for every model realization.
+2. If you checked **Run in window** in the **Options > NetLogo** library property, you will see the NetLogo GUI open and you will need to press **setup** then **go** followed by **File > Quit**. This will be repeated for every model realization.
 
 ## **Step 5: View Charts of Output**
 Once the simulation is complete you can use the [SyncroSim chart window](http://docs.syncrosim.com/how_to_guides/results_chart_window.html) to view NetLogo outputs. Note that you can disaggregate and include output for any of the variables defined in the project **Definitions**. You can also choose to use the [rsyncrosim package](https://syncrosim.com/r-package/) to extract model output into R dataframes.
