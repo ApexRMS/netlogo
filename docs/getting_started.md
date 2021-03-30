@@ -8,7 +8,7 @@ title: Getting started
 ## Quickstart Tutorial
 
 ## **Step 1: Configure Library Properties**
-1. Open the SyncroSim GUI and select **File | New**.
+1. Open the SyncroSim GUI and select **File** **|** **New**.
 2. Select the **netlogo** base package and the **NetLogo Example** template; specify a file name and folder location for your netlogo SyncroSim library and click **OK**.
 3. The [SyncroSim library explorer](http://docs.syncrosim.com/how_to_guides/library_explorer_overview.html) should now display your new netlogo library.
 4. Highlight your netlogo library in the library explorer and select **File > Library Properties**.
