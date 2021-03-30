@@ -11,8 +11,8 @@ title: Getting started
 1. Open the SyncroSim GUI and select **File I New**.
 2. Select the **netlogo** base package and the **NetLogo Example** template; specify a file name and folder location for your netlogo SyncroSim library and click **OK**.
 3. The [SyncroSim library explorer](http://docs.syncrosim.com/how_to_guides/library_explorer_overview.html) should now display your new netlogo library.
-4. Highlight your netlogo library in the library explorer and select **File > Library Properties**.
-5. On the **Options > NetLogo** of the **Library Properties** specify the **NetLogo executable filename** where the NetLogo.exe file is located. For the x64 version of NetLogo This is typically "**C:\Program Files\NetLogo 6.X.X**".
+4. Highlight your netlogo library in the library explorer and select **File I Library Properties**.
+5. On the **Options I NetLogo** of the **Library Properties** specify the **NetLogo executable filename** where the NetLogo.exe file is located. For the x64 version of NetLogo This is typically "**C:\Program Files\NetLogo 6.X.X**".
 6. In the **Library Properties** for NetLogo you can also select to **Run in window** which will at runtime show the NetLogo GUI. This is useful for initially debugging your model but can be cumbersome if you are running many model realizations and scenarios.
 
 ## **Step 2: View Definitions**
@@ -28,10 +28,13 @@ title: Getting started
 
 ## **Step 4: Run the NetLogo model**
 1. In the [SyncroSim library explorer](http://docs.syncrosim.com/how_to_guides/library_explorer_overview.html) right click on the scenario called **5 Bugs** and select **Run**.
-2. If you checked **Run in window** in the **Options > NetLogo** library property, you will see the NetLogo GUI open and you will need to press **setup** then **go** followed by **File > Quit**. This will be repeated for every model realization.
+2. If you checked **Run in window** in the **Options I NetLogo** library property, you will see the NetLogo GUI open and you will need to press **setup** then **go** followed by **File I Quit**. This will be repeated for every model realization.
 
 ## **Step 5: View Charts of Output**
 Once the simulation is complete you can use the [SyncroSim chart window](http://docs.syncrosim.com/how_to_guides/results_chart_window.html) to view NetLogo outputs. Note that you can disaggregate and include output for any of the variables defined in the project **Definitions**. You can also choose to use the [rsyncrosim package](https://syncrosim.com/r-package/) to extract model output into R dataframes.
 
 ## **Step 6: View Maps of output**
 The example library also contains a map that displays the Land Cover (Open, Closed or Invaded) for each cell at different realizations and time points. Mapping variables can be either discrete such as in this example or continuous. To view this map in the SyncroSim GUI you will need to use the [SyncroSim map window](http://docs.syncrosim.com/how_to_guides/results_map_window.html).
+
+## More Information
+For further information of the **netlogo** package, including instructions on how to build your own SyncroSim netlogo model, visit the [netlogo repository](https://github.com/ApexRMS/netlogo).
