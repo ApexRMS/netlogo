@@ -5,49 +5,46 @@ description: "Landing page for the Package"
 permalink: /
 ---
 
-# **Package_Name** SyncroSim Package
+# **NetLogo** SyncroSim Package
 <img align="right" style="padding: 13px" width="180" src="assets/images/logo/test-sticker.png">
-[![GitHub release](https://img.shields.io/github/v/release/ApexRMS/Package_Name.svg?style=for-the-badge&color=d68a06)](https://GitHub.com/ApexRMS/Package_Name/releases/)    <a href="https://github.com/ApexRMS/Package_Name"><img align="middle" style="padding: 1px" width="30" src="assets/images/logo/github-trans2.png">
+[![GitHub release](https://img.shields.io/github/v/release/ApexRMS/netlogo.svg?style=for-the-badge&color=d68a06)](https://GitHub.com/ApexRMS/netlogo/releases/)    <a href="https://github.com/ApexRMS/netlogo"><img align="middle" style="padding: 1px" width="30" src="assets/images/logo/github-trans2.png">
 <br>
 ## A one-line description of what the package is
 ### A two-line introduction to the gist of the package
 
 
-Body text: Description of package to go here. Approximately 1 to 2 paragraphs.
-
-An image can be inserted within the body text with the following code below
-< img align="right" style="padding: 15px" width="400" src="assets/images/name_of_image.png" >
+The [SyncroSim](https://syncrosim.com/) **NetLogo** package is designed to provide an interface for the [NetLogo model](https://ccl.northwestern.edu/netlogo/). NetLogo is a multi agent programmable environment for agent based simulation modelling. The **NetLogo** package for SyncroSim allows users to structure scenario input and output data, run the model and explore model outputs using either a graphical user interface (GUI), a command line interface or the [rsyncrosim](https://syncrosim.com/r-package/) package for [R](https://www.r-project.org/). The initial version of the **NetLogo** package was written against NetLogo version 6.1.1.
 
 ## Requirements
 
-This package requires SyncroSim [Insert_version_here](https://syncrosim.com/download/).
+This package requires SyncroSim [Version 2.2.27](https://syncrosim.com/download/).
 <br>
 <br>
 ## How to Install
 
-Open SyncroSim and select **File -> Packages… -> Install…**, then select the **Package_Name** package and click OK.
-
-Alternatively, download [the latest release from Github](https://github.com/ApexRMS/Package_Name/releases/). Open SyncroSim and navigate to packages, then install from file.
+1. [Download](https://ccl.northwestern.edu/netlogo/download.shtml) and install NetLogo (Note: a Java runtime environment is required to run NetLogo).
+2. [Install SyncroSim](http://docs.syncrosim.com/getting_started/inst_win.html).
+3. Open SyncroSim and select File -> Packages… -> Install…, then select the **netlogo** package and click OK.
 <br>
 <br>
 ## Getting Started
 
-For more information on **Package_Name**, including a Quickstart Tutorial, see the [Getting Started](https://apexrms.github.io/Package_Name/getting_started.html) page.
+For more information on the **NetLogo** SyncroSim package, including a Quickstart Tutorial, see the [Getting Started](https://apexrms.github.io/netlogo/getting_started.html) page.
 <br>
 <br>
 ## Links
 
 Browse source code at
-[http://github.com/ApexRMS/Package_Name/](http://github.com/ApexRMS/Package_Name/)
+[http://github.com/ApexRMS/netlogo/](http://github.com/ApexRMS/netlogo/)
 <br>
 Report a bug at
-[http://github.com/ApexRMS/Package_Name/issues](http://github.com/ApexRMS/Package_Name/issues)
+[http://github.com/ApexRMS/netlogo/issues](http://github.com/ApexRMS/netlogo/issues)
 <br>
 <br>
 ## Developers
 
-Developer_Name (Author, maintainer)
+Leonardo Frid (Author, maintainer)
 <br>
-Developer_Name (Author) <a href="https://orcid.org/Enter_Your_Link_Here"><img align="middle" style="padding: 0.5px" width="17" src="assets/images/ORCID.png"></a>
+Alex Embrey (Author)
 <br>
-Developer_Name (Author)
+Shreeram Senthivasan (Author)
