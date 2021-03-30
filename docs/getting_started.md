@@ -26,15 +26,15 @@ title: Getting started
 4. On the **Inputs** property note that you can specify a starting number of **Bugs** for the simulation.
 5. On the **Input Files** property you can specify the input ascii raster file that denotes the starting conditions for the landscape.
 
-## **Step 4: Run the NetLogo model**
+## **Step 4: Run the NetLogo Model**
 1. In the [SyncroSim library explorer](http://docs.syncrosim.com/how_to_guides/library_explorer_overview.html) right click on the scenario called **5 Bugs** and select **Run**.
 2. If you checked **Run in window** in the **Options I NetLogo** library property, you will see the NetLogo GUI open and you will need to press **setup** then **go** followed by **File I Quit**. This will be repeated for every model realization.
 
 ## **Step 5: View Charts of Output**
 Once the simulation is complete you can use the [SyncroSim chart window](http://docs.syncrosim.com/how_to_guides/results_chart_window.html) to view NetLogo outputs. Note that you can disaggregate and include output for any of the variables defined in the project **Definitions**. You can also choose to use the [rsyncrosim package](https://syncrosim.com/r-package/) to extract model output into R dataframes.
 
-## **Step 6: View Maps of output**
+## **Step 6: View Maps of Output**
 The example library also contains a map that displays the Land Cover (Open, Closed or Invaded) for each cell at different realizations and time points. Mapping variables can be either discrete such as in this example or continuous. To view this map in the SyncroSim GUI you will need to use the [SyncroSim map window](http://docs.syncrosim.com/how_to_guides/results_map_window.html).
 
-## More Information
-For further information of the **netlogo** package, including instructions on how to build your own SyncroSim netlogo model, visit the [netlogo repository](https://github.com/ApexRMS/netlogo).
+## Build Your Own Model
+For further information on the **netlogo** package, including instructions on how to build your own SyncroSim netlogo model, visit the [netlogo repository](https://github.com/ApexRMS/netlogo).
