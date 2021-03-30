@@ -26,7 +26,7 @@ This package requires SyncroSim [Version 2.2.27](https://syncrosim.com/download/
 2. [Install SyncroSim](http://docs.syncrosim.com/getting_started/inst_win.html).
 3. Open SyncroSim and select File -> Packages… -> Install…, then select the **netlogo** package and click OK.
 
-<br>
+
 ## Getting Started
 
 For more information on the **NetLogo** SyncroSim package, including a Quickstart Tutorial, see the [Getting Started](https://apexrms.github.io/netlogo/getting_started.html) page.
