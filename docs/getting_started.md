@@ -8,11 +8,11 @@ title: Getting started
 ## Quickstart Tutorial
 
 ## **Step 1: Configure Library Properties**
-1. Open the SyncroSim GUI and select **File | New**.
+1. Open the SyncroSim GUI and select **File > New**.
 2. Select the **netlogo** base package and the **NetLogo Example** template; specify a file name and folder location for your netlogo SyncroSim library and click **OK**.
 3. The [SyncroSim library explorer](http://docs.syncrosim.com/how_to_guides/library_explorer_overview.html) should now display your new netlogo library.
-4. Highlight your netlogo library in the library explorer and select **File | Library Properties**.
-5. On the **Options | NetLogo** of the **Library Properties** specify the **NetLogo executable filename** where the NetLogo.exe file is located. For the x64 version of NetLogo This is typically "**C:\Program Files\NetLogo 6.X.X**".
+4. Highlight your netlogo library in the library explorer and select **File > Library Properties**.
+5. On the **Options > NetLogo** of the **Library Properties** specify the **NetLogo executable filename** where the NetLogo.exe file is located. For the x64 version of NetLogo This is typically "**C:\Program Files\NetLogo 6.X.X**".
 6. In the **Library Properties** for NetLogo you can also select to **Run in window** which will at runtime show the NetLogo GUI. This is useful for initially debugging your model but can be cumbersome if you are running many model realizations and scenarios.
 
 ## **Step 2: View Definitions**
