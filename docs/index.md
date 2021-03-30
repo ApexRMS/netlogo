@@ -6,7 +6,7 @@ permalink: /
 ---
 
 # **NetLogo** SyncroSim Package
-<img align="right" style="padding: 13px" width="180" src="assets/images/logo/test-sticker.png">
+<img align="right" style="padding: 13px" width="180" src="assets/images/logo/netlogo-sticker.png">
 [![GitHub release](https://img.shields.io/github/v/release/ApexRMS/netlogo.svg?style=for-the-badge&color=d68a06)](https://GitHub.com/ApexRMS/netlogo/releases/)    <a href="https://github.com/ApexRMS/netlogo"><img align="middle" style="padding: 1px" width="30" src="assets/images/logo/github-trans2.png">
 <br>
 ## A one-line description of what the package is
