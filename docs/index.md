@@ -24,7 +24,7 @@ This package requires SyncroSim [Version 2.2.27](https://syncrosim.com/download/
 
 1. [Download](https://ccl.northwestern.edu/netlogo/download.shtml) and install NetLogo (Note: a Java runtime environment is required to run NetLogo).
 2. [Install SyncroSim](http://docs.syncrosim.com/getting_started/inst_win.html).
-3. Open SyncroSim and select File -> Packages… -> Install…, then select the **netlogo** package and click **OK**.
+3. Open SyncroSim and select **File -> Packages… -> Install…**, then select the **netlogo** package and click **OK**.
 
 <br>
 ## Getting Started
