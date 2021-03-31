@@ -36,7 +36,7 @@ Once the simulation is complete, you can use the [SyncroSim chart window](http:/
 ## **Step 6: View Maps of Output**
 The example library also contains a map that displays the Land Cover (Open, Closed or Invaded) for each cell at different realizations and time points. Mapping variables can be either discrete, such as in this example, or continuous. To view this map in the SyncroSim GUI you will need to use the [SyncroSim map window](http://docs.syncrosim.com/how_to_guides/results_map_window.html).
 
-
+<br>
 ## Build Your Own Model
 To learn how to build your own SyncroSim netlogo model, take a look at the [example nlogo code file](https://github.com/ApexRMS/netlogo/blob/master/src/Templates/netlogo-example.ssim.input/Scenario-1/netlogo_Script/netLogoExample.nlogo) provided with the template library. Note that if you open this file *as is* with NetLogo you will receive several errors because it contains **Symbols** where SyncroSim will insert values at runtime.
 
