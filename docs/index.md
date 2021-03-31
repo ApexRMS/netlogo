@@ -13,7 +13,7 @@ permalink: /
 ### *netlogo* is a [SyncroSim](https://syncrosim.com/) Base Package providing a scenario-based interface for running the NetLogo agent-based modelling environment.
 
 
-The [SyncroSim](https://syncrosim.com/) **netlogo** package is designed to provide an interface for the [NetLogo model](https://ccl.northwestern.edu/netlogo/). NetLogo is a multi agent programmable environment for agent based simulation modelling. The **netlogo** package for SyncroSim allows users to structure scenario input and output data, run the model and explore model outputs using either a graphical user interface (GUI), a command line interface or the [rsyncrosim](https://syncrosim.com/r-package/) package for [R](https://www.r-project.org/). The initial version of the **netlogo** package was written against NetLogo version 6.1.1.
+The [SyncroSim](https://syncrosim.com/) **netlogo** package is designed to provide an interface for the [NetLogo model](https://ccl.northwestern.edu/netlogo/). NetLogo is a multi-agent programmable environment for agent-based simulation modelling. The **netlogo** package for SyncroSim allows users to structure scenario input and output data, run the model and explore model outputs using either a graphical user interface (GUI), a command line interface or the [rsyncrosim](https://syncrosim.com/r-package/) package for [R](https://www.r-project.org/). The initial version of the **netlogo** package was written against NetLogo version 6.1.1.
 
 ## Requirements
 
