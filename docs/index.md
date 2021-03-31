@@ -43,7 +43,7 @@ Report a bug at
 <br>
 ## Developers
 
-Leonardo Frid (Author, maintainer)
+Leonardo Frid (Author, maintainer) <a href="https://orcid.org/0000-0002-5489-2337"><img align="middle" style="padding: 0.5px" width="17" src="assets/images/ORCID.png"></a>
 <br>
 Alex Embrey (Author)
 <br>
