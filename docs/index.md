@@ -17,7 +17,7 @@ The [SyncroSim](https://syncrosim.com/) **netlogo** package is designed to provi
 
 ## Requirements
 
-This package requires SyncroSim [Version 2.2.27](https://syncrosim.com/download/).
+This package requires the [latest SyncroSim release](https://syncrosim.com/download/).
 <br>
 <br>
 ## How to Install
