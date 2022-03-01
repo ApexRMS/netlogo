@@ -17,7 +17,7 @@ The [SyncroSim](https://syncrosim.com/) **netlogo** package is designed to provi
 
 ## Requirements
 
-This package requires the [latest SyncroSim release](https://syncrosim.com/download/).
+This package requires the [latest SyncroSim release](https://syncrosim.com/download/) and the [NetLogo Software](https://ccl.northwestern.edu/netlogo/index.shtml).
 <br>
 <br>
 ## How to Install
