@@ -208,7 +208,7 @@ namespace SyncroSim.NetLogo
                     string n = Path.GetFileNameWithoutExtension(SourceFileName);
                     string TifName = Path.Combine(tempFolderName, n + ".tif");
 
-                    Spatial.ConvertFromAAIGridFormat(SourceFileName, TifName, GeoTiffCompressionType.DEFLATE);
+                    Spatial.ConvertFromAAIGridFormat(SourceFileName, TifName, StochasticTime.GeoTiffCompressionType.DEFLATE);
                 }
             }
         }
