@@ -1,4 +1,4 @@
-# **netlogo+**
+# **netlogo**
 
 **netlogo** is an open-source [SyncroSim](http://www.syncrosim.com) base package for running the [NetLogo](https://ccl.northwestern.edu/netlogo/) agent-based modelling environment. 
 
