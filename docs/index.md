@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Home
-description: "Landing page for the Package"
+description: "SyncroSim package providing an interface for the NetLogo model"
 permalink: /
 ---
 
