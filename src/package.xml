@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<package name="netlogo" displayName="Runs the NetLogo agent-based modeling environment" version="1.2.0" url="https://apexrms.github.io/netlogo/">
+<package name="netlogo" displayName="Runs the NetLogo agent-based modeling environment" version="1.2.1" url="https://apexrms.github.io/netlogo/">
   <transformers>
     <transformer
         name="Primary"
